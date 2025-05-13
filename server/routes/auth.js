@@ -36,5 +36,9 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ message: '서버 오류' });
   }
 });
+//api: post /auth/logout
+router.post('/logout', (req, res) => {
+  res.json({ message: '로그아웃 되었습니다. 토큰을 삭제해주세요.' });
+});
 
 module.exports = router;
