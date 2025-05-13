@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { User } = require('../models'); // 경로는 상황에 따라 조정
+const { User } = require('../models'); 
 
-// POST /auth/login
+//API: POST /auth/login : 로그인 API
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -24,7 +24,7 @@ router.post('/login', async (req, res) => {
     // 3. JWT 토큰 생성
     const token = jwt.sign(
       { userId: user.id, email: user.email }, // payload
-      process.env.JWT_SECRET || 'secret_key', // 보통은 .env에서 관리
+      process.env.JWT_SECRET || 'secret_key', // .env에서
       { expiresIn: '1h' } // 유효시간
     );
 
