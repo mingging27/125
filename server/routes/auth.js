@@ -23,7 +23,7 @@ router.post('/login', async (req, res) => {
 
     // 3. JWT 토큰 생성
     const token = jwt.sign(
-      { userId: user.id, email: user.email }, // payload
+      { userId: user.get('user_id'), email: user.get('email') }, // payload
       process.env.JWT_SECRET || 'secret_key', // .env에서
       { expiresIn: '1h' } // 유효시간
     );
