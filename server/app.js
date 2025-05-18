@@ -10,6 +10,7 @@ const indexRouter = require('./routes');
 const userRouter = require('./routes/user');
 const authRouter=require('./routes/auth');
 const mypageRouter = require('./routes/mypage');
+const communityRouter = require('./routes/community');
 
 const app = express();
 app.use('/api', indexRouter);  //FE에서 작성
@@ -35,6 +36,7 @@ app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 app.use('/mypage', mypageRouter);
+app.use('/community', communityRouter);
 
 app.use((req, res, next) => {
   res.status(404).send('Not Found');
