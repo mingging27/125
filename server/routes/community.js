@@ -10,4 +10,6 @@ router.get('/:id/edit', controller.getEditForm);
 router.post('/:id/edit', controller.updatePost);
 router.post('/:id/delete', controller.deletePost);
 
+router.post('/:postId/comment', controller.createComment);
+
 module.exports = router;
