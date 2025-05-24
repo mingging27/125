@@ -1,0 +1,10 @@
+<h1>게시글 목록</h1>
+<a href="/community/new">글쓰기</a>
+<ul>
+  <% posts.forEach(post => { %>
+    <li>
+      <a href="/community/<%= post.community_post_id %>"><%= post.title %></a>
+      (작성자: <%= post.user_id %>, 좋아요: <%= post.like_count %>)
+    </li>
+  <% }) %>
+</ul>

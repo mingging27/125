@@ -50,3 +50,6 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기 중');
 });
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); // 템플릿 파일들이 들어 있는 폴더 경로
