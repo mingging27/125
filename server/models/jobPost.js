@@ -16,8 +16,9 @@ class JobPost extends Model {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      content: {
-        type: DataTypes.TEXT,
+      job_field: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
       },
       location_city: {
         type: DataTypes.STRING(100),
