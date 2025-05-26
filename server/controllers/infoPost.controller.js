@@ -12,7 +12,7 @@ exports.getInfoPosts = async (req, res) => {
 
     const {category} = req.query;
     const where = category ? {category} : {};
-    const validCategoried = Object.keys(categoryFieldsMap);
+    const validCategories = Object.keys(categoryFieldsMap);
 
     if (category && !validCategories.includes(category)) {
       return res.status(400).json({ error: '유효하지 않은 category입니다.' });
