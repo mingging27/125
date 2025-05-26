@@ -7,6 +7,7 @@ class InfoPost extends Model {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
+        autoIncrement: true,
       },
       source_url: {
         type: DataTypes.TEXT,
@@ -23,6 +24,12 @@ class InfoPost extends Model {
       },
       published_at: {
         type: DataTypes.DATE,
+      },
+      summary: {
+        type: DataTypes.TEXT,
+      },
+      thumbnail: {
+        type: DataTypes.TEXT,
       },
     }, {
       sequelize,
