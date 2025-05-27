@@ -6,13 +6,13 @@ const { User } = require('../models');
 
 //API: POST /auth/login : 로그인 API
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   try {
     // 1. 유저 존재 확인
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { username } });
     if (!user) {
-      return res.status(400).json({ message: '이메일이 존재하지 않습니다.' });
+      return res.status(400).json({ message: '아이디가가 존재하지 않습니다.' });
     }
 
     // 2. 비밀번호 비교
@@ -23,7 +23,7 @@ router.post('/login', async (req, res) => {
 
     // 3. JWT 토큰 생성
     const token = jwt.sign(
-      { userId: user.get('user_id'), email: user.get('email') }, // payload
+      { userId: user.get('user_id'), email: user.get('username') }, // payload
       process.env.JWT_SECRET || 'secret_key', // .env에서
       { expiresIn: '1h' } // 유효시간
     );

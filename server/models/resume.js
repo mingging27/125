@@ -1,4 +1,4 @@
-// models/Resume.js
+// models/resume.js
 module.exports = (sequelize, DataTypes) => {
   const Resume = sequelize.define('Resume', {
     resume_id: {

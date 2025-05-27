@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key'); // ✅ 현재 비밀키
     req.user = decoded; // 이후 라우터에서 사용자 정보 사용 가능
-    next(); // 인증 성공하면면 다음 미들웨어 or 라우터 실행
+    next(); // 인증 성공하면 다음 미들웨어 or 라우터 실행
   } catch (err) {
     console.error('[authMiddleware] 유효하지 않은 토큰:', err.message);
     return res.status(401).json({ message: '유효하지 않은 토큰입니다.' });

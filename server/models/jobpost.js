@@ -1,3 +1,4 @@
+// models/jobpost.js (대충 포스트맨 전용)
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
@@ -7,18 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    company_id: DataTypes.INTEGER,
-    title: DataTypes.STRING(255),
-    content: DataTypes.TEXT,
-    location_city: DataTypes.STRING(100),
-    employment_type: DataTypes.ENUM('fullTime', 'partTime', 'contract'),
-    work_hour: DataTypes.STRING(50),
-    salary_info: DataTypes.STRING(100),
-    status: DataTypes.ENUM('open', 'closed'),
-    published_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    }
+    // 기타 필드들...
   }, {
     tableName: 'JobPost',
     timestamps: false,

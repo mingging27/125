@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
+    login_id:{
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
     username: {
       type: DataTypes.STRING(45),
       allowNull: false,
@@ -51,6 +55,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     birthdate: {
       type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    address: {
+      type: DataTypes.STRING(50),
       allowNull: true,
     },
   }, {
