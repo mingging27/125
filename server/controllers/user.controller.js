@@ -38,3 +38,34 @@ exports.signup = async (req, res) => {
     return res.status(500).json({ message: '서버 오류' });
   }
 };
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const user = await User.findByPk (userId);
+
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    const {
+      username, phone_number, gender, birthdate,
+      address, profileImage, bio
+    } = req.body;
+
+    if (username) user.username = username;
+    if (phone_number) user.phone_number = phone_number;
+    if (gender) user.gender = gender;
+    if (birthdate) user.birthdate = birthdate;
+    if (address) user.address = address;
+    if (profileImage) user.profileImage = profileImage;
+    if (bio) user.bio = bio;
+
+    await user.save();
+
+    res.json({ message: '회원 정보 수정 완료' });
+  } catch (err) {
+    console.error('[updateProfile] 에러:', err);
+    res.status(500).json({ message: '서버 오류' });
+  }
+};
