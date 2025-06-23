@@ -20,7 +20,7 @@ const ListTitle = styled.h2`
   margin-left: 10px;
 `;
 
-const ListWrap = styled.div`
+const ListWrap = styled.div` 
   width: 1280px;
   display: column;
   justify-content: center;
