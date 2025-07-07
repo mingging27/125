@@ -10,8 +10,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 
     부모 컴포넌트 호출 예시
-    <List type={"이력서"}/>
+    <List type={"이력서"} data={리스트 형태의 데이터}/>
 */
+
+const PositionWrap = styled.div `
+`;
 
 const ListTitle = styled.h2`
   color: black;
@@ -84,10 +87,8 @@ const theme = createTheme({
   },
 });
 
-function List({ type }) {
-  const [stockList, setStockList] = useState(
-    Array.from({ length: 100 }, (_, i) => i + 1) // 더미 데이터 1~47
-  );
+function List({ type, data }) {
+  const [stockList, setStockList] = useState(data);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -104,6 +105,7 @@ function List({ type }) {
 
   return (
     <>
+      <PositionWrap>
       <ListTitle>{type}</ListTitle>
       <ListWrap>
       <Content>
@@ -115,16 +117,14 @@ function List({ type }) {
         </SubTitle>
         
         {currentList.map((item, idx) => (
-          <ListContent
-            key={idx}
-            type={type === "이력서" ? "resume" : "default"}
-            index={indexOfFirstItem + idx + 1}
-            title={`제목 ${indexOfFirstItem + idx + 1}`}
-            date={`2025-06-${(indexOfFirstItem + idx + 1)
-              .toString()
-              .padStart(2, "0")}`}
-          />
-        ))}
+  <ListContent
+    key={item.id}
+    type={type === "이력서" ? "resume" : "default"}
+    index={indexOfFirstItem + idx + 1}
+    title={item.title}
+    date={item.date}
+  />
+))}
       </Content>
       <PaginationWrap>
         <ThemeProvider theme={theme}>
@@ -140,6 +140,7 @@ function List({ type }) {
       </ThemeProvider>
       </PaginationWrap>
       </ListWrap>
+      </PositionWrap>
     </>
   );
 }

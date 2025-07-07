@@ -6,47 +6,48 @@ const Container = styled.div`
   width: 100vw;
   position: fixed;
 
+  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-
-
-  height: 154px;
+  height: 114px;
+  z-index: 999;
 `; 
 
 const Top = styled.div `
-  width: 1278px;
+  width: 1178px;
   height: 90px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
 `;
 
 const Appname = styled.h1 `
   margin: 0;
   color: #2D66D0;
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 900;
 `;
 
 const SearchBox = styled.form`
-  width: 466px;
-  height: 60px;
+  width: 370px;
+  height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: 1px solid #3478F6;
-  padding-right: 30px;
+  padding-right: 10px;
 `;
 
 const SearchInput = styled.input `
-  height: 50px;
-  width: 380px;
+  height: 30px;
+  width: 340px;
   border: none;
-  padding-left: 30px;
+  padding-left: 21px;
 
   /* 폰트 */
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
 
   &:focus {
@@ -84,15 +85,15 @@ const Navigation = styled.ul `
   border-bottom: 1px solid #3478F6;
 
   /* 폰트 */
-  font-size: 28px;
+  font-size: 20px;
   font-weight: bold;
   color: #2D66D0;
 
 `;
 
 const Category = styled.li `
-  width: 213px;
-  height: 64px;
+  width: 190px;
+  height: 50px;
   
   display: flex;
   justify-content: center;

@@ -1,10 +1,19 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { motion, AnimatePresence } from "framer-motion";
 
 /*
+라이브러리 설치해주세요!
+npm install framer-motion
+
 부모 컴포넌트 호출 예시
 
 <Question question={sampleQuestion} answer={sampleAnswer} />
 */
+
+const Content = styled.div `
+    margin-bottom: 50px;
+`;
 
 const Qdiv = styled.div`
     width: 1280px;
@@ -57,16 +66,37 @@ const Atext = styled(Qtext)`
     width: 1171px;
 `;
 
-function Question({question, answer}) {
-    return (
-        <>
-    <Qdiv>
-        <Qtext>{question}</Qtext>
-      <Qbutton>모범 답안 확인하기</Qbutton>
-    </Qdiv>
-    <Adiv>
-        <Atext>{answer}</Atext>
-    </Adiv>
+function Question({ question, answer }) {
+  const [showAnswer, setShowAnswer] = useState(false); // 초기 false
+
+  const toggleAnswer = () => setShowAnswer(prev => !prev);
+
+  return (
+    <>
+      <Content>
+        <Qdiv>
+          <Qtext>{question}</Qtext>
+          <Qbutton onClick={toggleAnswer}>
+            {showAnswer ? "모범 답안 숨기기" : "모범 답안 확인하기"}
+          </Qbutton>
+        </Qdiv>
+
+        <AnimatePresence>
+          {showAnswer && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{ overflow: "hidden" }}
+            >
+              <Adiv>
+                <Atext>{answer}</Atext>
+              </Adiv>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Content>
     </>
   );
 }

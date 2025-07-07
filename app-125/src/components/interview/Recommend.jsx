@@ -18,6 +18,10 @@ import weaknessIcon from "../../img/interview/Weakness.png";
 />
 */
 
+const PositionWrap = styled.div `
+  margin-bottom: 48px;
+`;
+
 const Title = styled.div`
   width: 1280px;
   border: none;
@@ -60,6 +64,7 @@ function Recommend({ type, title, content, solution }) {
 
   return (
     <>
+    <PositionWrap>
       <Title>
         <img src={icon} alt={`${type} 아이콘`} />
         <Titletext>{titleText}</Titletext>
@@ -76,6 +81,7 @@ function Recommend({ type, title, content, solution }) {
           <Contenttext>{solution}</Contenttext>
         </Content>
       )}
+      </PositionWrap>
     </>
   );
 }
