@@ -171,7 +171,7 @@ const BoxRecommend = styled.p `
     font-weight: bold;
 `;
 
-function QuestionList() {
+function Detail() {
     return (
     <>
         <Content>
@@ -297,4 +297,4 @@ function QuestionList() {
   );
 }
 
-export default QuestionList;
+export default Detail;

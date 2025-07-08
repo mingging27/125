@@ -57,7 +57,7 @@ const List = styled.ul `
     padding-left: 20px;
 `;
 
-function ResumeList() {
+function Example() {
 
     return (
     <>
@@ -155,4 +155,4 @@ function ResumeList() {
   );
 }
 
-export default ResumeList;
+export default Example;
