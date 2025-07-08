@@ -7,6 +7,8 @@ import Result from './pages/interview/Result';
 import QuestionList from './pages/interview/QuestionList';
 import RecommendList from './pages/resume/RecommendList';
 import ResumeList from './pages/resume/ResumeList';
+import Example from './pages/resume/Example';
+import Detail from './pages/resume/Detail';
 
 
 function App() {
@@ -14,7 +16,7 @@ function App() {
   return (
     <div className="App">
       <Header/>
-      <ResumeList/>
+      <Detail/>
     </div>
   );
 }
