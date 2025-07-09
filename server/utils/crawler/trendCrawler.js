@@ -5,6 +5,7 @@ const { InfoPost } = require('../../models/index.js');
 async function saveToDB(articleList) {
   for (const article of articleList) {
     try {
+      const exists = await InfoPost.findOne({ where: { title: article.title } }); // 중복 검사
       if (exists) {
         console.log(`이미 존재하여 중복 저장 X: ${article.title}`);
         continue;
@@ -20,7 +21,7 @@ async function saveToDB(articleList) {
         published_at: new Date(article.date),
       });
     } catch (err) {
-      console.error(`저장 실패: ${article.title}`, err.message);
+      console.error(`❌ 저장 실패: ${article.title}`, err.message);
     }
     console.log(`✅ 저장 완료: ${article.title}`);
   }
@@ -100,5 +101,7 @@ async function crawlNews(keyword, maxPages = 1) {
   await browser.close();
 }
 
-// 3. 실행
-crawlNews("중장년 취업 지원", 1);
+// // 3. 실행 -> 실행 코드는 따로 분리
+// crawlNews("중장년 취업 지원", 1); // 일단 1페이지만 크롤링
+
+module.exports = { crawlNews };

@@ -5,7 +5,7 @@ exports.getInfoPosts = async (req, res) => {
   try {
     const categoryFieldsMap = {
       info_trend: ['info_post_id', 'title', 'thumbnail', 'summary', 'published_at'],
-      info_edu: [],
+      info_edu: ['info_post_id', 'title', 'summary', 'published_at'],
       info_recommend: [],
       info_support: [],
     }
