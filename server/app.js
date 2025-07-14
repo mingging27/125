@@ -47,10 +47,10 @@ app.use(session({
   name: 'session-cookie',
 }));
 
-app.use('/', indexRouter);
-app.use('/user', userRouter);
-app.use('/jobPosts', jobPostRouter);
-app.use('/infoPosts', infoPostRouter);
+app.use('/api', indexRouter);
+app.use('/api/user', userRouter);
+app.use('/api/jobPosts', jobPostRouter);
+app.use('/api/infoPosts', infoPostRouter);
 
 app.use((req, res, next) => {
   res.status(404).send('Not Found');
