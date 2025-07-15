@@ -36,7 +36,7 @@ app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 app.use('/mypage', mypageRouter);
-app.use('/community', communityRouter);
+app.use('/api/community', communityRouter);
 
 app.use((req, res, next) => {
   res.status(404).send('Not Found');
