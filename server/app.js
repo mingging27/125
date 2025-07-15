@@ -31,10 +31,10 @@ app.use(session({
   name: 'session-cookie',
 }));
 
-app.use('/', indexRouter);
-app.use('/user', userRouter);
-app.use('/auth', authRouter);
-app.use('/mypage', mypageRouter);
+app.use('/api', indexRouter);
+app.use('/api/user', userRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/mypage', mypageRouter);
 
 app.use((req, res, next) => {
   res.status(404).send('Not Found');

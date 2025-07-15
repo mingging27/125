@@ -12,7 +12,7 @@ router.post('/login', async (req, res) => {
     // 1. 유저 존재 확인
     const user = await User.findOne({ where: { login_id } });
     if (!user) {
-      return res.status(400).json({ message: '아이디가가 존재하지 않습니다.' });
+      return res.status(400).json({ message: '아이디가 존재하지 않습니다.' });
     }
 
     // 2. 비밀번호 비교
