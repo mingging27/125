@@ -36,6 +36,7 @@ app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 app.use('/mypage', mypageRouter);
+//경로명 수정
 app.use('/api/community', communityRouter);
 
 app.use((req, res, next) => {
