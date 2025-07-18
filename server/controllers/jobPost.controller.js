@@ -3,10 +3,22 @@ const { JobPost } = require('../models');
 
 exports.getAllJobPosts = async (req, res) => {
   try {
-    const jobPosts = await JobPost.findAll();
+    const jobPosts = await JobPost.findAll({
+      attributes: [
+        'job_post_id',
+        'company',
+        'title',
+        'job_field',
+        'location_city',
+        'employment_type'
+      ],
+      order: [['created_at', 'DESC']]
+    });
+
     res.json(jobPosts);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ message: '채용 목록 조회 실패' });
   }
 };
 
