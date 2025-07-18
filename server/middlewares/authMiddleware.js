@@ -11,7 +11,7 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key'); // ✅ 현재 비밀키
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key'); // 현재 비밀키
     req.user = decoded; // 이후 라우터에서 사용자 정보 사용 가능
     next(); // 인증 성공하면 다음 미들웨어 or 라우터 실행
   } catch (err) {
