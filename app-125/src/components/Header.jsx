@@ -1,17 +1,24 @@
+// src/components/Header.jsx
+
 import styled from "styled-components";
 import searchicon from "../img/Search.png";
 import logo from "../img/logo.png";
-import { useNavigate } from "react-router-dom"; 
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   background-color: white;
   width: 100vw;
   position: fixed;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 114px;
+  z-index: 999;
 `;
 
-const Top = styled.div `
-  width: 1078px;
+const Top = styled.div`
+  width: 1178px;
   height: 90px;
   display: flex;
   justify-content: space-between;
@@ -19,8 +26,10 @@ const Top = styled.div `
   margin-top: 20px;
 `;
 
-const AppLogo = styled.img `
-  width: 200px;
+const AppLogo = styled.img`
+  width: 180px;
+  margin-bottom: 12px;
+  cursor: pointer;
 `;
 
 const SearchBox = styled.form`
@@ -33,13 +42,11 @@ const SearchBox = styled.form`
   padding-right: 10px;
 `;
 
-const SearchInput = styled.input `
+const SearchInput = styled.input`
   height: 30px;
   width: 340px;
   border: none;
   padding-left: 21px;
-
-  /* 폰트 */
   font-size: 15px;
   font-weight: bold;
 
@@ -62,32 +69,33 @@ const SearchBtn = styled.button`
   justify-content: center;
 `;
 
-const SearchBtnImg = styled.img `
+const SearchBtnImg = styled.img`
+  width: 30px;
+  height: 30px;
 `;
 
-const Navigation = styled.ul `
+const Navigation = styled.ul`
   width: 100%;
   display: flex;
   justify-content: center;
   list-style: none;
   padding: 0;
+  margin: 0;
   background-color: white;
   border-top: 1px solid #3478F6;
   border-bottom: 1px solid #3478F6;
-
-  /* 폰트 */
   font-size: 20px;
   font-weight: bold;
   color: #2D66D0;
-
 `;
 
-const Category = styled.li `
+const Category = styled.li`
   width: 190px;
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   &:hover {
     color: white;
@@ -95,12 +103,13 @@ const Category = styled.li `
   }
 `;
 
-
 function Header() {
-    return (
+  const navigate = useNavigate();
+
+  return (
     <Container>
       <Top>
-        <AppLogo src={logo}/>
+        <AppLogo src={logo} onClick={() => navigate("/")} />
         <SearchBox>
           <SearchInput type="text" placeholder="검색어를 입력하세요" />
           <SearchBtn type="submit">
@@ -108,12 +117,13 @@ function Header() {
           </SearchBtn>
         </SearchBox>
       </Top>
+
       <Navigation>
-        <Category>구인 / 구직</Category>
-        <Category>이력서</Category>
-        <Category>커뮤니티</Category>
-        <Category>정보게시판</Category>
-        <Category>마이페이지</Category>
+        <Category onClick={() => navigate("/recruit")}>구인 / 구직</Category>
+        <Category onClick={() => navigate("/resume")}>이력서</Category>
+        <Category onClick={() => navigate("/community")}>커뮤니티</Category>
+        <Category onClick={() => navigate("/infoboard/trend")}>정보게시판</Category>
+        <Category onClick={() => navigate("/mypage")}>마이페이지</Category>
         <Category>로그아웃</Category>
       </Navigation>
     </Container>
