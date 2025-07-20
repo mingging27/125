@@ -1,19 +1,14 @@
 import styled from "styled-components";
 import searchicon from "../img/Search.png";
 import logo from "../img/logo.png";
+import { useNavigate } from "react-router-dom"; 
+import { useState } from "react";
 
 const Container = styled.div`
   background-color: white;
   width: 100vw;
   position: fixed;
-
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 114px;
-  z-index: 999;
-`; 
+`;
 
 const Top = styled.div `
   width: 1078px;
@@ -26,7 +21,6 @@ const Top = styled.div `
 
 const AppLogo = styled.img `
   width: 200px;
-  
 `;
 
 const SearchBox = styled.form`
@@ -69,8 +63,6 @@ const SearchBtn = styled.button`
 `;
 
 const SearchBtnImg = styled.img `
-  width: 30px;
-  height: 30px;
 `;
 
 const Navigation = styled.ul `
@@ -93,7 +85,6 @@ const Navigation = styled.ul `
 const Category = styled.li `
   width: 190px;
   height: 50px;
-  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -103,6 +94,7 @@ const Category = styled.li `
     background-color: #2D66D0;
   }
 `;
+
 
 function Header() {
     return (
