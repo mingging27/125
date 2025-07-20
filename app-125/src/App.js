@@ -9,6 +9,7 @@ import RecommendList from './pages/resume/RecommendList';
 import ResumeList from './pages/resume/ResumeList';
 import Example from './pages/resume/Example';
 import Detail from './pages/resume/Detail';
+import Create from './pages/resume/ResumeCreate';
 
 
 function App() {
@@ -16,7 +17,6 @@ function App() {
   return (
     <div className="App">
       <Header/>
-      <Detail/>
     </div>
   );
 }

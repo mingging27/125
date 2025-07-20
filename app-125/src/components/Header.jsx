@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import searchicon from "../img/Search.png";
+import logo from "../img/logo.png";
 
 const Container = styled.div`
   background-color: white;
@@ -15,7 +16,7 @@ const Container = styled.div`
 `; 
 
 const Top = styled.div `
-  width: 1178px;
+  width: 1078px;
   height: 90px;
   display: flex;
   justify-content: space-between;
@@ -23,11 +24,9 @@ const Top = styled.div `
   margin-top: 20px;
 `;
 
-const Appname = styled.h1 `
-  margin: 0;
-  color: #2D66D0;
-  font-size: 30px;
-  font-weight: 900;
+const AppLogo = styled.img `
+  width: 200px;
+  
 `;
 
 const SearchBox = styled.form`
@@ -109,7 +108,7 @@ function Header() {
     return (
     <Container>
       <Top>
-        <Appname>/*125 일이요!*/</Appname>
+        <AppLogo src={logo}/>
         <SearchBox>
           <SearchInput type="text" placeholder="검색어를 입력하세요" />
           <SearchBtn type="submit">
