@@ -1,7 +1,5 @@
-// src/components/DigitalCardList.jsx
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom"; 
 
 const Grid = styled.div`
   display: grid;
@@ -67,12 +65,11 @@ const dummyPrograms = [
 ];
 
 function DigitalCardList() {
-  const navigate = useNavigate(); 
 
   return (
     <Grid>
       {dummyPrograms.map(program => (
-        <Card key={program.id} onClick={() => navigate(`/infoboard/education/${program.id}`)}>
+        <Card>
           <ImageBox />
           <Content>
             <Title>{program.title}</Title>

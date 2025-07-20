@@ -122,7 +122,7 @@ const Card = styled.div`
 
 const CardImage = styled.img`
   width: 100%;
-  height: 140px;
+  height: 100px;
   object-fit: contain;
   margin-bottom: 10px;
 `;

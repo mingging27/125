@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import InterviewQuestionSection from '../../components/interview/InterviewQuestionSection';
 import { useParams } from 'react-router-dom';
 import recruitData from '../../data/mockRecruitData';
-
 
 const Container = styled.div`
   max-width: 1178px;
@@ -13,19 +12,10 @@ const Container = styled.div`
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  display: flex;
 `;
 
 const LeftSection = styled.div`
-  flex: 3;
   padding: 32px;
-`;
-
-const RightSection = styled.div`
-  flex: 1;
-  padding: 32px 24px;
-  background-color: #f9f9f9;
-  border-left: 1px solid #eee;
 `;
 
 const Company = styled.div`
@@ -75,54 +65,6 @@ const Value = styled.div`
   color: #222;
 `;
 
-const Bold = styled.span`
-  font-weight: 700;
-`;
-
-const LogoPlaceholder = styled.div`
-  width: 100%;
-  height: 100px;
-  background-color: #eee;
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #bbb;
-  font-weight: 700;
-`;
-
-const CompanyInfoTitle = styled.h3`
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 16px;
-`;
-
-const InfoItem = styled.div`
-  display: flex;
-  font-size: 14px;
-  margin-bottom: 8px;
-`;
-
-const InfoLabel = styled.div`
-  width: 80px;
-  color: #aaa;
-`;
-
-const InfoValue = styled.div`
-  color: #000;
-  font-weight: 500;
-`;
-
-const DetailButton = styled.button`
-  margin-top: 20px;
-  padding: 6px 12px;
-  font-size: 13px;
-  background-color: transparent;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  cursor: pointer;
-`;
-
 const OuterWrapper = styled.div`
   padding-top: 114px;
 `;
@@ -139,22 +81,21 @@ const Title = styled.h2`
   margin-bottom: 10px;
 `;
 
-
 const ButtonWrap = styled.div`
   margin-top: 40px;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   gap: 20px;
 `;
 
 const DetailButtonStyled = styled.button`
   background: #FEAD5C;
   color: white;
-  font-weight: 600;       
+  font-weight: 600;
   font-size: 16px;
   padding: 14px 28px;
   border: none;
-  border-radius: 999px;    
+  border-radius: 999px;
   cursor: pointer;
   transition: opacity 0.2s;
   box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.15);
@@ -165,9 +106,8 @@ const DetailButtonStyled = styled.button`
 `;
 
 const WebsiteButtonStyled = styled(DetailButtonStyled)`
-  background: #5EC27D;  
+  background: #5EC27D;
 `;
-
 
 const RecruitDetailPage = () => {
   const { id } = useParams();
@@ -181,53 +121,43 @@ const RecruitDetailPage = () => {
       <OuterWrapper>
         <InnerWrapper>
           <Title>채용 정보</Title>
-           <Container>
-                <LeftSection>
-                    <Company>기업1</Company>
-                    <JobTitle>[기업1] 2025 상반기 경력 채용</JobTitle>
-                    <Divider />
-                    <SectionWrapper>
-                    <Section>
-                        <SectionTitle>지원자격</SectionTitle>
-                        <Item><Label>경력</Label><Value>경력 직무별 상이</Value></Item>
-                        <Item><Label>학력</Label><Value>고졸이상 직무별 상이</Value></Item>
-                        <Item><Label>스킬</Label><Value>JAVA, JSP, MySQL, Oracle, Excel, CREO</Value></Item>
-                        <Item><Label>우대</Label><Value>국가 유공자</Value></Item>
-                        <Item><Label>분야</Label><Value>AI</Value></Item>
-                        <Item><Label>연령</Label><Value>40세~62세</Value></Item>
-                    </Section>
+          <Container>
+            <LeftSection>
+              <Company>기업1</Company>
+              <JobTitle>[기업1] 2025 상반기 경력 채용</JobTitle>
+              <Divider />
+              <SectionWrapper>
+                <Section>
+                  <SectionTitle>지원자격</SectionTitle>
+                  <Item><Label>경력</Label><Value>경력 직무별 상이</Value></Item>
+                  <Item><Label>학력</Label><Value>고졸이상 직무별 상이</Value></Item>
+                  <Item><Label>스킬</Label><Value>JAVA, JSP, MySQL, Oracle, Excel, CREO</Value></Item>
+                  <Item><Label>우대</Label><Value>국가 유공자</Value></Item>
+                  <Item><Label>분야</Label><Value>AI</Value></Item>
+                  <Item><Label>연령</Label><Value>40세~62세</Value></Item>
+                </Section>
 
-                    <Section>
-                        <SectionTitle>근무조건</SectionTitle>
-                        <Item><Label>고용형태</Label><Value>정규직 수습 3개월</Value></Item>
-                        <Item><Label></Label><Value>계약직 근무기간 1년</Value></Item>
-                        <Item><Label>급여</Label><Value>회사내규에 따름</Value></Item>
-                        <Item><Label>지역</Label><Value>서울시 강남구, 강동구, 성북구, 양천구, 경남 양산시</Value></Item>
-                        <Item><Label>시간</Label><Value>주 5일 (월~금) 8:30~17:30</Value></Item>
-                    </Section>
-                    </SectionWrapper>
-                </LeftSection>
+                <Section>
+                  <SectionTitle>근무조건</SectionTitle>
+                  <Item><Label>고용형태</Label><Value>정규직 수습 3개월</Value></Item>
+                  <Item><Label></Label><Value>계약직 근무기간 1년</Value></Item>
+                  <Item><Label>급여</Label><Value>회사내규에 따름</Value></Item>
+                  <Item><Label>지역</Label><Value>서울시 강남구, 강동구, 성북구, 양천구, 경남 양산시</Value></Item>
+                  <Item><Label>시간</Label><Value>주 5일 (월~금) 8:30~17:30</Value></Item>
+                </Section>
+              </SectionWrapper>
+            </LeftSection>
+          </Container>
 
-                <RightSection>
-                    <LogoPlaceholder>기업 로고 이미지</LogoPlaceholder>
-                    <CompanyInfoTitle>기업정보</CompanyInfoTitle>
-                    <InfoItem><InfoLabel>산업(업종)</InfoLabel><InfoValue>지주회사</InfoValue></InfoItem>
-                    <InfoItem><InfoLabel>사원수</InfoLabel><InfoValue>1,570명</InfoValue></InfoItem>
-                    <InfoItem><InfoLabel>설립년도</InfoLabel><InfoValue>1978년 (48년차)</InfoValue></InfoItem>
-                    <InfoItem><InfoLabel>기업형태</InfoLabel><InfoValue>중견기업 (코스피)</InfoValue></InfoItem>
-                    <InfoItem><InfoLabel>홈페이지</InfoLabel><InfoValue>www.hhhh</InfoValue></InfoItem>
-                    <DetailButton>기업정보 &gt;</DetailButton>
-                </RightSection>
-            </Container>
-
-            <ButtonWrap>
+          <ButtonWrap>
             <DetailButtonStyled>상세요강 바로가기 →</DetailButtonStyled>
             <WebsiteButtonStyled>홈페이지 바로가기 →</WebsiteButtonStyled>
-            </ButtonWrap>
+          </ButtonWrap>
+
+          <InterviewQuestionSection />
 
         </InnerWrapper>
       </OuterWrapper>
-
     </>
   );
 };

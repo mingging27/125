@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { HiOutlineEye, HiOutlineVideoCamera } from "react-icons/hi";
 import Header from "../../components/Header";
 
 const PageWrapper = styled.div`
@@ -14,47 +13,64 @@ const PageWrapper = styled.div`
 const Title = styled.h2`
   font-size: 24px;
   font-weight: 700;
+  margin-top: 50px;
   margin-bottom: 30px;
 `;
 
 const CardWrapper = styled.div`
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 32px;
+  background-color: #fff;
 `;
 
-const TopInfo = styled.div`
+const Thumbnail = styled.div`
+  width: 100%;
+  height: 300px;
+  background-color: #d9d9d9;
+  border-radius: 16px;
+  margin-bottom: 24px;
+`;
+
+const CategoryTag = styled.div`
+  display: inline-block;
+  font-size: 14px;
+  background-color: #f1f1f1;
+  color: #555;
+  border-radius: 8px;
+  padding: 4px 12px;
   margin-bottom: 12px;
 `;
 
-const InfoTitle = styled.div`
-  font-size: 18px;
+const InfoTitle = styled.h3`
+  font-size: 20px;
   font-weight: 600;
+  margin-bottom: 8px;
 `;
 
 const Meta = styled.div`
-  color: #bdbdbd;
-  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 8px;
+  font-size: 14px;
+  color: #bdbdbd;
+  margin-bottom: 20px;
+
+  svg {
+    vertical-align: middle;
+  }
 `;
 
-const VideoBox = styled.div`
-  background-color: #d9d9d9;
-  border-radius: 24px;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 24px;
+const Summary = styled.p`
+  font-size: 15px;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 32px;
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
 `;
 
 const GoSiteButton = styled.button`
@@ -72,7 +88,7 @@ const GoSiteButton = styled.button`
   }
 `;
 
-function DigitalEducationDetail() {
+function EmploymentTrendDetail() {
   const { id } = useParams();
   const [data, setData] = useState(null);
 
@@ -83,6 +99,9 @@ function DigitalEducationDetail() {
       views: 1000,
       date: "2025-05-21",
       siteUrl: "https://example.com",
+      summary: "이 강의는 누구나 무료로 들을 수 있는 HTML/CSS 기초 교육입니다.",
+      category: "디지털 교육",
+      thumbnail: null, // 추후 이미지 경로가 생기면 대체
     });
   }, [id]);
 
@@ -94,18 +113,13 @@ function DigitalEducationDetail() {
       <PageWrapper>
         <Title>디지털 기술 교육</Title>
         <CardWrapper>
-          <TopInfo>
-            <InfoTitle>{data.title}</InfoTitle>
-            <Meta>
-              <span><HiOutlineEye /> {data.views}</span>
-              <span>{data.date} 작성</span>
-            </Meta>
-          </TopInfo>
-
-          <VideoBox>
-            <HiOutlineVideoCamera size={40} color="#555" />
-          </VideoBox>
-
+          <Thumbnail />
+          <CategoryTag>{data.category}</CategoryTag>
+          <InfoTitle>{data.title}</InfoTitle>
+          <Meta>
+            <span>{data.date}</span>
+          </Meta>
+          <Summary>{data.summary}</Summary>
           <ButtonWrapper>
             <GoSiteButton onClick={() => window.open(data.siteUrl)}>
               사이트 바로가기 →
@@ -117,4 +131,4 @@ function DigitalEducationDetail() {
   );
 }
 
-export default DigitalEducationDetail;
+export default EmploymentTrendDetail;

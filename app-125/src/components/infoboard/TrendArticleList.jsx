@@ -1,6 +1,6 @@
-// src/components/TrendArticleList.jsx
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";  
 
 const Grid = styled.div`
   display: grid;
@@ -15,6 +15,12 @@ const Card = styled.div`
   overflow: hidden;
   text-align: center;
   padding: 20px 16px;
+  cursor: pointer; 
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px); 
+  }
 `;
 
 const Thumbnail = styled.div`
@@ -42,10 +48,16 @@ const dummyArticles = [
 ];
 
 function TrendArticleList() {
+  const navigate = useNavigate(); 
+
+  const handleCardClick = (id) => {
+     navigate(`/infoboard/trend/${id}`);
+  };
+
   return (
     <Grid>
       {dummyArticles.map(article => (
-        <Card key={article.id}>
+        <Card key={article.id} onClick={() => handleCardClick(article.id)}>
           <Thumbnail />
           <Title>{article.title}</Title>
         </Card>

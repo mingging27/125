@@ -53,14 +53,6 @@ const Tag = styled.div`
   margin-bottom: 16px;
 `;
 
-const CompanyDesc = styled.div`
-  font-size: 16px;
-  padding: 10px 14px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  margin-bottom: 20px;
-`;
 
 const JobDesc = styled.div`
   font-size: 16px;
@@ -138,8 +130,6 @@ function SeniorJobDetail() {
           </TopInfo>
 
           <Tag>{data.field}</Tag>
-
-          <CompanyDesc>{data.companyDesc}</CompanyDesc>
 
           <JobDesc>{data.jobSummary}</JobDesc>
 

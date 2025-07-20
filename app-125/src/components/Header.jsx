@@ -151,7 +151,7 @@ function Header() {
   return (
     <Container>
       <Top>
-        <Appname>/*125 일이요!*/</Appname>
+        <Appname onClick={() => navigate("/")}>125 일이요!</Appname>
         <SearchBox>
           <SearchInput type="text" placeholder="검색어를 입력하세요" />
           <SearchBtn type="submit">
@@ -183,7 +183,7 @@ function Header() {
         </CategoryWrapper>
 
         <CategoryWrapper>
-          <Category>커뮤니티</Category>
+          <Category onClick={() => navigate("/community")}>커뮤니티</Category>
         </CategoryWrapper>
 
         {/* 정보게시판 */}
@@ -197,9 +197,6 @@ function Header() {
           {activeDropdown === "infoboard" && (
             <Dropdown>
               <DropdownContent>
-                <DropdownItem onClick={() => navigate("/infoboard/support")}>
-                  • 지원제도
-                </DropdownItem>
                 <DropdownItem onClick={() => navigate("/infoboard/education")}>
                   • 디지털 기술 교육
                 </DropdownItem>
@@ -216,7 +213,7 @@ function Header() {
 
 
         <CategoryWrapper>
-          <Category>마이페이지</Category>
+          <Category onClick={() => navigate("/mypage")}>마이페이지</Category>
         </CategoryWrapper>
 
         <CategoryWrapper>
