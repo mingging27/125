@@ -89,5 +89,21 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  Resume.associate = (models) => {
+    Resume.hasMany(models.UserCertificate, {
+      foreignKey: "resume_id",
+      as: "certificates",
+    });
+    Resume.hasMany(models.UserLanguageScore, {
+      foreignKey: "resume_id",
+      as: "languageScores",
+    });
+    Resume.hasMany(models.UserPreferredDay, {
+      foreignKey: "resume_id",
+      as: "preferredDays",
+    });
+  };
+
+
   return Resume;
 };

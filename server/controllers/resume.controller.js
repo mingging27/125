@@ -1,18 +1,61 @@
 // controllers/resume.controller.js
 
-const { Resume } = require('../models');
+const { Resume, UserCertificate, UserLanguageScore, UserPreferredDay } = require('../models');
 
-// 이력서 등록 (Create)
 exports.createResume = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const resume = await Resume.create({ ...req.body, user_id: userId });
-    res.status(201).json({ message: '이력서 등록 성공', resume });
+
+    // 1) Resume 단독 생성
+    const resume = await Resume.create({
+      ...req.body,
+      user_id: userId,
+    });
+
+    const resumeId = resume.resume_id;
+
+    // 2) 연관 데이터 개별 생성
+    for (const cert of (req.body.certificates || [])) {
+      await UserCertificate.create({
+        ...cert,
+        user_id: userId,
+        resume_id: resumeId,
+      });
+    }
+
+    for (const lang of (req.body.languageScores || [])) {
+      await UserLanguageScore.create({
+        ...lang,
+        user_id: userId,
+        resume_id: resumeId,
+      });
+    }
+
+    for (const dayObj of (req.body.preferredDays || [])) {
+      await UserPreferredDay.create({
+        ...dayObj,
+        user_id: userId,
+        resume_id: resumeId,
+      });
+    }
+
+    // 3) 저장된 데이터 다시 조회해서 반환
+    const fullResume = await Resume.findOne({
+      where: { resume_id: resumeId },
+      include: [
+        { model: UserCertificate, as: 'certificates', attributes: ['certificate_name', 'acquisition_year'] },
+        { model: UserLanguageScore, as: 'languageScores', attributes: ['test_name', 'score', 'acquisition_year'] },
+        { model: UserPreferredDay, as: 'preferredDays', attributes: ['day'] }
+      ],
+    });
+
+    res.status(201).json({ message: '이력서 등록 성공', resume: fullResume });
   } catch (err) {
     console.error('이력서 등록 에러:', err);
     res.status(500).json({ message: '서버 오류' });
   }
 };
+
 
 // 이력서 전체 조회 (Read All)
 exports.getAllResumes = async (req, res) => {
@@ -20,6 +63,11 @@ exports.getAllResumes = async (req, res) => {
     const resumes = await Resume.findAll({
       where: { user_id: req.user.userId },
       order: [['created_at', 'DESC']],
+      include: [
+        { model: UserCertificate, as: 'certificates', attributes: ['certificate_name', 'acquisition_year'] },
+        { model: UserLanguageScore, as: 'languageScores', attributes: ['test_name', 'score', 'acquisition_year'] },
+        { model: UserPreferredDay, as: 'preferredDays', attributes: ['day'] }
+      ],
     });
     res.json({ resumes });
   } catch (err) {
@@ -33,6 +81,11 @@ exports.getResumeById = async (req, res) => {
   try {
     const resume = await Resume.findOne({
       where: { resume_id: req.params.resumeId, user_id: req.user.userId },
+      include: [
+        { model: UserCertificate, as: 'certificates', attributes: ['certificate_name', 'acquisition_year'] },
+        { model: UserLanguageScore, as: 'languageScores', attributes: ['test_name', 'score', 'acquisition_year'] },
+        { model: UserPreferredDay, as: 'preferredDays', attributes: ['day'] }
+      ],
     });
 
     if (!resume) return res.status(404).json({ message: '이력서 없음' });

@@ -23,12 +23,24 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER, // Sequelize는 YEAR 타입 없음 → INTEGER 사용
         allowNull: true,
       },
+      resume_id: {            // 이 부분 꼭 추가!
+        type: DataTypes.BIGINT,
+        allowNull: false,
+      },
     },
     {
       tableName: "user_language_scores",
       timestamps: false,
     }
   );
+
+  UserLanguageScore.associate = (models) => {
+    UserLanguageScore.belongsTo(models.Resume, {
+      foreignKey: "resume_id",
+      targetKey: "resume_id",
+      as: "resume",
+    });
+  };
 
   return UserLanguageScore;
 };

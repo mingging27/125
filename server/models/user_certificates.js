@@ -16,8 +16,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       acquisition_year: {
-        type: DataTypes.INTEGER, // Sequelize에는 YEAR 타입 없음 → 정수로 처리
+        type: DataTypes.INTEGER,
         allowNull: true,
+      },
+      resume_id: {            // 이 부분 꼭 추가!
+        type: DataTypes.BIGINT,
+        allowNull: false,
       },
     },
     {
@@ -25,6 +29,14 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
+
+  UserCertificate.associate = (models) => {
+    UserCertificate.belongsTo(models.Resume, {
+      foreignKey: "resume_id",
+      targetKey: "resume_id",
+      as: "resume",
+    });
+  };
 
   return UserCertificate;
 };
