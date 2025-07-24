@@ -66,5 +66,43 @@ router.put('/mypage/update', authMiddleware, async (req, res) => {
   }
 });
 
+// GET /api/user/info-for-resume
+router.get('/info-for-resume', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const user = await User.findByPk(userId, {
+      attributes: ['username', 'birthdate', 'gender', 'address', 'phone_number', 'email']
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    // 생년월일 → 나이 계산 (만 나이 기준)
+    const birthdate = new Date(user.birthdate);
+    const today = new Date();
+    let age = today.getFullYear() - birthdate.getFullYear();
+
+    const m = today.getMonth() - birthdate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
+      age--;  // 아직 생일 안 지났으면 -1
+    }
+
+    res.json({
+      name: user.username,
+      age,                      // ← 계산된 나이
+      gender: user.gender,
+      address: user.address,
+      phone: user.phone_number,
+      email: user.email
+    });
+
+  } catch (err) {
+    console.error('[info-for-resume] 에러:', err);
+    res.status(500).json({ message: '서버 오류' });
+  }
+});
+
 
 module.exports = router;
