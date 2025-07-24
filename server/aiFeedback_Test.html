@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI 피드백 테스트</title>
+  </head>
+  <body>
+    <h1>AI 이력서 피드백 테스트</h1>
+
+    <form id="feedbackForm">
+      <label>
+        Job Role:
+        <input
+          type="text"
+          name="job_role"
+          value="Backend Developer"
+          required
+        /> </label
+      ><br />
+
+      <label>
+        Industry:
+        <input type="text" name="industry" value="IT" required /> </label
+      ><br />
+
+      <label>
+        Career Gap:
+        <input type="text" name="career_gap" value="2 years" required /> </label
+      ><br />
+
+      <label>
+        Career History:<br />
+        <textarea name="career_history" rows="4" cols="50">
+3 years at Naver as a backend developer</textarea
+        ></label
+      ><br />
+
+      <label>
+        Resume ID (optional):
+        <input type="number" name="resume_id" value="3" /> </label
+      ><br /><br />
+
+      <button type="submit">AI 피드백 요청</button>
+    </form>
+
+    <h2>응답 결과</h2>
+    <div id="resultBox">
+      <h3>예상 질문</h3>
+      <ul id="questionsList"></ul>
+
+      <h3>모범 답변</h3>
+      <ul id="answersList"></ul>
+
+      <h3>강점</h3>
+      <p id="strengths"></p>
+
+      <h3>약점</h3>
+      <p id="weaknesses"></p>
+
+      <h3>추천 키워드</h3>
+      <p id="keywords"></p>
+
+      <h3>추천 활동</h3>
+      <p id="activities"></p>
+    </div>
+
+    <script>
+      document
+        .getElementById("feedbackForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const form = e.target;
+          const data = {
+            resume_id: form.resume_id.value || null,
+            job_role: form.job_role.value,
+            industry: form.industry.value,
+            career_gap: form.career_gap.value,
+            career_history: form.career_history.value,
+          };
+
+          try {
+            const res = await fetch("http://localhost:3002/api/aiFeedback", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+
+            const json = await res.json();
+
+            // 배열 출력
+            const questions = json.feedback.expected_questions || [];
+            const answers = json.feedback.model_answers || [];
+
+            const qList = document.getElementById("questionsList");
+            const aList = document.getElementById("answersList");
+            qList.innerHTML = "";
+            aList.innerHTML = "";
+            questions.forEach((q) => {
+              const li = document.createElement("li");
+              li.textContent = q;
+              qList.appendChild(li);
+            });
+            answers.forEach((a) => {
+              const li = document.createElement("li");
+              li.textContent = a;
+              aList.appendChild(li);
+            });
+
+            // 단일 값 출력
+            document.getElementById("strengths").textContent =
+              json.feedback.strengths;
+            document.getElementById("weaknesses").textContent =
+              json.feedback.weaknesses;
+            document.getElementById("keywords").textContent =
+              json.feedback.recommended_keywords;
+            // 추천 활동 출력
+            const activities = json.feedback.recommended_activities;
+            const activitiesEl = document.getElementById("activities");
+
+            if (typeof activities === "string") {
+              // GPT가 실수로 string으로 준 경우
+              activitiesEl.textContent = activities;
+            } else if (typeof activities === "object") {
+              // 새로운 구조: 카테고리별 항목 배열
+              activitiesEl.innerHTML = ""; // 초기화
+
+              for (const category in activities) {
+                const title = document.createElement("strong");
+                title.textContent = `${category}`;
+                activitiesEl.appendChild(title);
+
+                const ul = document.createElement("ul");
+                activities[category].forEach((item) => {
+                  const li = document.createElement("li");
+                  li.textContent = item;
+                  ul.appendChild(li);
+                });
+
+                activitiesEl.appendChild(ul);
+              }
+            }
+          } catch (err) {
+            document.getElementById("resultBox").textContent =
+              "요청 실패: " + err.message;
+          }
+        });
+    </script>
+  </body>
+</html>

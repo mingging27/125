@@ -32,13 +32,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       expected_questions: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.TEXT,
         allowNull: true,
       },
       model_answers: {
-        type: DataTypes.STRING(300),
+        type: DataTypes.TEXT,
         allowNull: true,
       },
+
       strengths: {
         type: DataTypes.STRING(300),
         allowNull: true,
