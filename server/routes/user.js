@@ -20,7 +20,7 @@ router.get('/mypage', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.userId;
     const user = await User.findByPk(userId, {
-      attributes: ['user_id','login_id', 'email', 'username', 'profileImage', 'bio', 'darkmode', 'gender', 'address', 'birthdate', 'phone_number']
+      attributes: ['user_id','login_id', 'email', 'username', 'bio', 'darkmode', 'gender', 'address', 'birthdate', 'phone_number']
     });
 
     if (!user) {
@@ -54,7 +54,6 @@ router.put('/mypage/update', authMiddleware, async (req, res) => {
     if (gender) user.gender = gender;
     if (birthdate) user.birthdate = birthdate;
     if (address) user.address = address;
-    if (profileImage) user.profileImage = profileImage;
     if (bio) user.bio = bio;
 
     await user.save();

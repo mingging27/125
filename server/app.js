@@ -59,7 +59,6 @@ app.use('/api/mypage', mypageRouter);
 app.use('/api/jobPosts', jobPostRouter);
 app.use('/api/infoPosts', infoPostRouter);
 app.use('/api/community', communityRouter);
-app.use('/images', express.static(__dirname + '/public/images'));
 app.use('/api/resumes', resumeRouter);
 
 // 에러 처리
