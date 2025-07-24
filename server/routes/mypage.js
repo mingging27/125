@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
+const resumeController = require('../controllers/resume.controller');
 
 const { Application, JobPost } = require('../models');
 
@@ -38,5 +39,8 @@ router.get('/applications', authMiddleware, async (req, res) => {
     res.status(500).json({ message: '서버 오류' });
   }
 });
+
+// GET /api/mypage/resumes
+router.get('/resumes', authMiddleware, resumeController.getAllResumes);
 
 module.exports = router;

@@ -16,6 +16,7 @@ const mypageRouter = require('./routes/mypage');
 const communityRouter = require('./routes/community');
 const jobPostRouter = require('./routes/jobPost.route');
 const infoPostRouter = require('./routes/infoPost.route');
+const resumeRouter = require('./routes/resume');
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use('/api/jobPosts', jobPostRouter);
 app.use('/api/infoPosts', infoPostRouter);
 app.use('/api/community', communityRouter);
 app.use('/images', express.static(__dirname + '/public/images'));
+app.use('/api/resumes', resumeRouter);
 
 // 에러 처리
 app.use((req, res, next) => {
