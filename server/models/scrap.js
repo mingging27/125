@@ -34,5 +34,23 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   });
 
+  Scrap.associate = function(models) {
+  // 사용자와의 관계
+    Scrap.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      as: 'user'
+    });
+
+    // 커뮤니티 게시글과의 관계
+    Scrap.belongsTo(models.CommunityPost, {
+      foreignKey: 'community_post_id',
+      as: 'communityPost'
+    });
+
+    // 필요하면 info_post, job_post도 여기에 연결 가능
+  };
+
   return Scrap;
 };
+
+
