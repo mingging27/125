@@ -77,7 +77,7 @@ router.get('/scraps', authMiddleware, async (req, res) => {
   }
 });
 
-// DELETE /mypage/scraps/:postId - 스크랩 취소
+// DELETE /api/mypage/scraps/:postId - 스크랩 취소
 router.delete('/scraps/:postId', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.userId;
