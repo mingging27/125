@@ -66,5 +66,14 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false, // created_at 직접 사용하므로 자동 생성 안 함
   });
 
+  User.associate = function(models) {
+    User.hasMany(models.Scrap, {
+      foreignKey: 'user_id',
+      as: 'scraps'
+    });
+
+    // 다른 연관관계도 여기에서 정의 (예: posts, comments 등)
+  };
+
   return User;
 };
