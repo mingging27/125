@@ -45,7 +45,7 @@ router.get('/applications', authMiddleware, async (req, res) => {
 // GET /api/mypage/resumes
 router.get('/resumes', authMiddleware, resumeController.getAllResumes);
 
-// GET /mypage/scraps
+// GET /api/mypage/scraps
 router.get('/scraps', authMiddleware, async (req, res) => {
   console.log('현재 사용자:', req.user);
   try {
