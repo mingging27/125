@@ -1,5 +1,6 @@
 // src/components/Header.jsx
 
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import searchicon from "../img/Search.png";
 import logo from "../img/logo.png";
@@ -106,6 +107,39 @@ const Category = styled.li`
 function Header() {
   const navigate = useNavigate();
 
+  // 토큰 존재 여부로 로그인 상태 판단
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // 저장한 토큰 키 이름 확인
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      // 서버 로그아웃 API 호출 (필요시)
+      const response = await fetch("http://127.0.0.1:3002/api/auth/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message || "로그아웃 되었습니다.");
+        localStorage.removeItem("token"); // 토큰 삭제
+        setIsLoggedIn(false);
+        navigate("/"); // 로그아웃 후 메인 페이지로 이동
+      } else {
+        alert(data.message || "로그아웃 실패");
+      }
+    } catch (error) {
+      alert("로그아웃 중 오류가 발생했습니다.");
+      console.error(error);
+    }
+  };
+
   return (
     <Container>
       <Top>
@@ -124,7 +158,16 @@ function Header() {
         <Category onClick={() => navigate("/community")}>커뮤니티</Category>
         <Category onClick={() => navigate("/infoboard/trend")}>정보게시판</Category>
         <Category onClick={() => navigate("/mypage")}>마이페이지</Category>
-        <Category>로그아웃</Category>
+
+        {isLoggedIn ? (
+          <Category onClick={handleLogout} style={{ cursor: "pointer" }}>
+            로그아웃
+          </Category>
+        ) : (
+          <Category onClick={() => navigate("/login")} style={{ cursor: "pointer" }}>
+            로그인
+          </Category>
+        )}
       </Navigation>
     </Container>
   );

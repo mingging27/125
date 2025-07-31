@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 
 const Content = styled.div`
@@ -112,12 +113,17 @@ function Signup() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [name, setName] = useState("");
-    const [birthGender, setBirthGender] = useState("");
+    const [birthdate, setBirthdate] = useState(""); // yyyy-mm-dd 형식
+    const [gender, setGender] = useState("");       // male / female
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+
+    // api 연동
+    const handleSubmit = async (e) => {
   e.preventDefault();
 
   if (
@@ -125,7 +131,8 @@ function Signup() {
     !password.trim() ||
     !confirmPassword.trim() ||
     !name.trim() ||
-    !birthGender.trim() ||
+    !birthdate.trim() ||
+    !gender.trim() ||
     !address.trim() ||
     !phone.trim() ||
     !email.trim()
@@ -133,7 +140,37 @@ function Signup() {
     alert("필수 입력 항목을 모두 작성해 주세요.");
     return;
   }
+
+  try {
+    const response = await fetch("http://127.0.0.1:3002/api/user/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        login_id: username,
+        password: password,
+        confirmPassword: confirmPassword,
+        email: email,
+        username: name,
+        phone_number: phone,
+        gender: gender,
+        birthdate: birthdate,
+        address: address,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "회원가입 실패");
+    }
+    alert("회원가입이 완료되었습니다!");
+    navigate("/login");
+  } catch (error) {
+    alert(`회원가입 중 오류 발생: ${error.message}`);
+  }
 };
+
 
 
     return (
@@ -161,9 +198,17 @@ function Signup() {
 
                     </InputDiv3>
                     <InputDiv3>
-                        <Label3>생년월일 ∙ 성별<Essential color="red">*</Essential></Label3>
-                        <Input type="text" value={birthGender} onChange={(e) => setBirthGender(e.target.value)} />
-                    </InputDiv3>
+              <Label3>생년월일<Essential>*</Essential></Label3>
+              <Input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} />
+            </InputDiv3>
+            <InputDiv3>
+              <Label3>성별<Essential>*</Essential></Label3>
+              <select value={gender} onChange={(e) => setGender(e.target.value)}>
+                <option value="">선택</option>
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+              </select>
+            </InputDiv3>
                     </InputDiv2>
                     <InputDiv3>
                         <Label2>주소<Essential color="red">*</Essential></Label2>

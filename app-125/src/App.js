@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from './components/Header';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Select from './pages/interview/Select';
@@ -38,6 +37,10 @@ function App() {
     <GlobalStyle />
       <Routes>
         <Route path="/" element={<MainPage />} />
+
+        {/* 유저 */}
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
 
         {/* 구인/구직 */}
         <Route path='/recruit' element={<RecruitListPage />} />
