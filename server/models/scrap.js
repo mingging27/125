@@ -47,7 +47,11 @@ module.exports = (sequelize, DataTypes) => {
       as: 'communityPost'
     });
 
-    // 필요하면 info_post, job_post도 여기에 연결 가능
+    // 정보글(infoPost)과의 관계
+    Scrap.belongsTo(models.InfoPost, {
+      foreignKey: 'info_post_id',
+      as: 'infoPost'
+    });
   };
 
   return Scrap;
