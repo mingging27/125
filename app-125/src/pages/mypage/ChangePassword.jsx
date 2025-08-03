@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance";
 import SuccessModal from "../../modal/SuccessModal";
 
 const Container = styled.div`
@@ -49,30 +51,55 @@ const SubmitButton = styled.button`
 `;
 
 function ChangePassword() {
-    const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const [newPassword, setNewPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // TODO: 비밀번호 변경 API 호출
-    setShowModal(true); // 모달 열기
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    return (
+    try {
+      await axiosInstance.put("/api/user/mypage/update", {
+        password: newPassword,
+      });
+
+      setShowModal(true);
+      setNewPassword("");
+    } catch (error) {
+      console.error("비밀번호 변경 실패:", error);
+      alert("비밀번호 변경 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    navigate("/mypage/account"); // 계정 관리 페이지로 이동
+  };
+
+  return (
     <Container>
-      <Label htmlFor="currentPassword">현재 비밀번호 입력</Label>
-      <Input id="currentPassword" type="password" placeholder="..." />
-
       <Label htmlFor="newPassword">새로운 비밀번호 입력</Label>
-      <Input id="newPassword" type="password" placeholder="..." />
+      <Input
+        id="newPassword"
+        type="password"
+        placeholder="새 비밀번호"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+      />
 
       <ButtonWrapper>
         <SubmitButton onClick={handleSubmit}>수정하기</SubmitButton>
       </ButtonWrapper>
 
-      {showModal && <SuccessModal onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <SuccessModal
+          onClose={handleCloseModal}
+          title="비밀번호 변경 완료"
+          message="비밀번호가 성공적으로 변경되었습니다."
+        />
+      )}
     </Container>
-
-    );
+  );
 }
 
 export default ChangePassword;

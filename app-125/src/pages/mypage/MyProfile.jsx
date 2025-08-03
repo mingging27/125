@@ -1,8 +1,9 @@
-import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Switch from "react-switch";
 import styled from "styled-components";
 import avatar from "../../img/avatar.png";
 import SuccessModal from "../../modal/SuccessModal";
+import axiosInstance from "../../api/axiosInstance";
 
 const ProfileContainer = styled.div`
   max-width: 1178px;
@@ -13,7 +14,7 @@ const ProfileContainer = styled.div`
 const SectionTitle = styled.h2`
   font-size: 24px;
   font-weight: 700;
-  margin-top :0;
+  margin-top: 0;
   margin-bottom: 40px;
 `;
 
@@ -24,7 +25,7 @@ const ProfileCard = styled.div`
   padding: 40px;
   border-radius: 4px;
   background-color: #fff;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `;
 
 const AvatarWrapper = styled.div`
@@ -42,21 +43,28 @@ const Avatar = styled.img`
   background-color: #f2f2f2;
 `;
 
-const ChangeButton = styled.button`
-  margin-top: 20px;
-  padding: 6px 16px;
-  border: 2px solid #3e63dd;
-  border-radius: 2px;
-  background: white;
-  color: #3e63dd;
-  font-weight: 500;
-  cursor: pointer;
-`;
+// const ChangeButton = styled.button`
+//   margin-top: 20px;
+//   padding: 6px 16px;
+//   border: 2px solid #3e63dd;
+//   border-radius: 2px;
+//   background: white;
+//   color: #3e63dd;
+//   font-weight: 500;
+//   cursor: pointer;
+// `;
 
 const ProfileInfo = styled.div`
   font-size: 16px;
   line-height: 2;
 `;
+
+// const ProfileMeta = styled.div`
+//   font-size: 14px;
+//   color: #666;
+//   margin-left: 160px;
+//   margin-bottom: 30px;
+// `;
 
 const Label = styled.div`
   font-size: 13px;
@@ -91,16 +99,14 @@ const Row = styled.div`
 
 const ButtonSection = styled.div`
   display: flex;
-  justify-content: center; 
-  margin-top: 50px; 
+  justify-content: center;
+  margin-top: 50px;
 `;
-
 
 const EditButton = styled.button`
   background-color: #000;
   color: #fff;
   padding: 10px 24px;
-
   font-size: 15px;
   border: none;
   border-radius: 30px;
@@ -111,62 +117,143 @@ const EditButton = styled.button`
   }
 `;
 
-
 function MyProfile() {
+  const [user, setUser] = useState(null);
+  const [bio, setBio] = useState("");
+  const [address, setAddress] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-    const [showModal, setShowModal] = useState(false);
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axiosInstance.get("/api/user/mypage");
+      const data = response.data.user;
+      setUser(data);
+      setBio(data.bio || "");
+      setAddress(data.address || "");
+      setDarkMode(Boolean(data.darkmode));
+    } catch (error) {
+      console.error("유저 정보 불러오기 실패:", error);
+    }
+  };
 
-    const handleEditClick = () => {
-        // TODO: 수정 처리 로직 추가
-    setShowModal(true); // 모달 띄우기
-    };
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+  const handleEditClick = async () => {
+    try {
+      await axiosInstance.put("/api/user/mypage/update", {
+        bio,
+        address,
+      });
+      await fetchUserProfile();
+      setShowModal(true);
+    } catch (error) {
+      console.error("프로필 수정 실패:", error);
+    }
+  };
+
+  const handleToggleDarkMode = async (checked) => {
+    setDarkMode(checked);
+    try {
+      await axiosInstance.put("/api/user/mypage/update", {
+        darkmode: checked ? 1 : 0,
+      });
+    } catch (error) {
+      console.error("다크모드 업데이트 실패:", error);
+    }
+  };
+
   return (
     <ProfileContainer>
       <SectionTitle>프로필</SectionTitle>
 
-      <ProfileCard>
-        <AvatarWrapper>
-          <Avatar src={avatar} alt="프로필 이미지" />
-          <ChangeButton>사진 변경</ChangeButton>
-        </AvatarWrapper>
-        <ProfileInfo>
-          <div>이름: 김푸짐</div>
-          <div>아이디: pujim1234</div>
-          <div>생년월일: 2030.12.30</div>
-          <div>성별: 여자</div>
-        </ProfileInfo>
-      </ProfileCard>
+      {user && (
+        <>
+          <ProfileCard>
+            <AvatarWrapper>
+              <Avatar src={user.profileImage || avatar} alt="프로필 이미지" />
+              {/* 사진 변경 로직 없으므로 일단 주석 처리 */}
+              {/* <ChangeButton>사진 변경</ChangeButton> */}
+            </AvatarWrapper>
 
-      <Row>
-        <div>
-          <Label>이메일</Label>
-          <Input type="email" value="pujim@gmail.com" disabled />
-        </div>
-        <div>
-          <Label>휴대폰 번호</Label>
-          <Input type="text" value="010-1234-5678" disabled />
-        </div>
-      </Row>
+            <div style={{ flex: 1 }}>
+              {/* 다크모드 토글 - sql에 있어서 일단 버튼 추가, 기능은 아직 */}
+              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <span style={{ marginRight: "8px", fontSize: "14px", color: "#666" }}>다크모드</span>
+                  <Switch
+                    onChange={handleToggleDarkMode}
+                    checked={darkMode}
+                    onColor="#3e63dd"
+                    offColor="#ccc"
+                    uncheckedIcon={false}
+                    checkedIcon={false}
+                    height={20}
+                    width={40}
+                  />
+                </div>
+              </div>
 
-      <div>
-        <Label>주소</Label>
-        <Input type="text" value="서울특별시 도봉구 삼양로 144길 33" disabled />
-      </div>
-      
-      <ButtonSection>
-        <EditButton onClick={handleEditClick}>수정하기</EditButton>
-      </ButtonSection>
+              {/* 프로필 정보 */}
+              <ProfileInfo>
+                <div>이름: {user.username}</div>
+                <div>아이디: {user.login_id}</div>
+                <div>생년월일: {user.birthdate}</div>
+                <div>성별: {user.gender === "female" ? "여자" : "남자"}</div>
+                {user.bio && <div>자기소개: {user.bio}</div>}
+              </ProfileInfo>
+            </div>
+          </ProfileCard>
 
-    {showModal && (
+          <Row>
+            <div>
+              <Label>이메일</Label>
+              <Input type="email" value={user.email} disabled />
+            </div>
+            <div>
+              <Label>휴대폰 번호</Label>
+              <Input type="text" value={user.phone_number} disabled />
+            </div>
+          </Row>
+
+          <div>
+            <Label>자기소개</Label>
+            <Input
+              type="text"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="자기소개를 입력하세요"
+            />
+          </div>
+
+          <div style={{ marginTop: "24px" }}>
+            <Label>주소</Label>
+            <Input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="주소를 입력하세요"
+            />
+          </div>
+
+          <ButtonSection>
+            <EditButton onClick={handleEditClick}>수정하기</EditButton>
+          </ButtonSection>
+        </>
+      )}
+
+      {showModal && (
         <SuccessModal
           onClose={() => setShowModal(false)}
           title="수정 성공"
           message="프로필이 수정되었습니다."
         />
       )}
-
     </ProfileContainer>
   );
+
 }
 
 export default MyProfile;

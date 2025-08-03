@@ -28,11 +28,12 @@ const CompanyRow = styled.div`
   gap: 8px;
 `;
 
-const Company = styled.div`
-  font-size: 22px; 
-  font-weight: 700;
-  padding-rigth:10px;
-`;
+// Company 필드 누락 임시 주석 처리
+// const Company = styled.div`
+//   font-size: 22px; 
+//   font-weight: 700;
+//   padding-rigth:10px;
+// `;
 
 const LikeImg = styled.img`
   width: 20px;
@@ -125,7 +126,8 @@ const RecruitCard = ({ post }) => {
     <Card onClick={handleClick}>
     <LeftSection>
         <CompanyRow>
-        <Company>기업{post.company_id}</Company>
+        <span>{post.company || "회사명 없음"}</span>
+
         <LikeImg
             src={liked ? likeIcon : defaultLikeIcon}
             alt="좋아요"

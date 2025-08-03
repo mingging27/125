@@ -1,7 +1,10 @@
+// src/components/Header.jsx
+
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import searchicon from "../img/Search.png";
-import { useNavigate } from "react-router-dom"; 
-import { useState } from "react";
+import logo from "../img/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   background-color: white;
@@ -24,11 +27,10 @@ const Top = styled.div`
   margin-top: 20px;
 `;
 
-const Appname = styled.h1`
-  margin: 0;
-  color: #2D66D0;
-  font-size: 30px;
-  font-weight: 900;
+const AppLogo = styled.img`
+  width: 180px;
+  margin-bottom: 12px;
+  cursor: pointer;
 `;
 
 const SearchBox = styled.form`
@@ -79,27 +81,22 @@ const Navigation = styled.ul`
   justify-content: center;
   list-style: none;
   padding: 0;
+  margin: 0;
   background-color: white;
   border-top: 1px solid #3478F6;
   border-bottom: 1px solid #3478F6;
   font-size: 20px;
   font-weight: bold;
   color: #2D66D0;
-  
 `;
 
-const CategoryWrapper = styled.li`
-  position: relative;
+const Category = styled.li`
   width: 190px;
   height: 50px;
-`;
-
-const Category = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   &:hover {
     color: white;
@@ -107,53 +104,63 @@ const Category = styled.div`
   }
 `;
 
-const Dropdown = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: #2D66D0;
-  color: white;
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-  z-index: 1000;
-`;
-
-const DropdownContent = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-`;
-
-const DropdownItem = styled.div`
-  font-size: 17px;
-  font-weight: normal;  
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
 function Header() {
   const navigate = useNavigate();
-  const [activeDropdown, setActiveDropdown] = useState(null);
 
-  const handleMouseOver = (menu) => {
-    setActiveDropdown(menu);
+  // 토큰 존재 여부로 로그인 상태 판단
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // 검색어 관리 상태 
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // 저장한 토큰 키 이름 확인
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      // 서버 로그아웃 API 호출 (필요시)
+      const response = await fetch("http://127.0.0.1:3002/api/auth/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message || "로그아웃 되었습니다.");
+        localStorage.removeItem("token"); // 토큰 삭제
+        setIsLoggedIn(false);
+        navigate("/"); // 로그아웃 후 메인 페이지로 이동
+      } else {
+        alert(data.message || "로그아웃 실패");
+      }
+    } catch (error) {
+      alert("로그아웃 중 오류가 발생했습니다.");
+      console.error(error);
+    }
   };
 
-  const handleMouseOut = () => {
-    setActiveDropdown(null);
+  // 검색 제출 핸들러 추가
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchKeyword.trim() === "") return;
+    navigate(`/community?search=${encodeURIComponent(searchKeyword.trim())}`);
+    setSearchKeyword("");
   };
 
   return (
     <Container>
       <Top>
-        <Appname onClick={() => navigate("/")}>125 일이요!</Appname>
-        <SearchBox>
-          <SearchInput type="text" placeholder="검색어를 입력하세요" />
+        <AppLogo src={logo} onClick={() => navigate("/")} />
+        <SearchBox onSubmit={handleSearch}>
+          <SearchInput
+            type="text"
+            placeholder="검색어를 입력하세요"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
           <SearchBtn type="submit">
             <SearchBtnImg src={searchicon} alt="검색" />
           </SearchBtn>
@@ -161,64 +168,21 @@ function Header() {
       </Top>
 
       <Navigation>
-        {/* 구인/구직 */}
-        <CategoryWrapper onMouseOver={() => handleMouseOver("recruit")} onMouseOut={handleMouseOut}>
-          <Category>구인 / 구직</Category>
-          {activeDropdown === "recruit" && (
-            <Dropdown>
-              <DropdownContent>
-                <DropdownItem onClick={() => navigate("/recruit")}>
-                  • 채용 정보
-                </DropdownItem>
-                <DropdownItem onClick={() => navigate("/recruit/ai")}>
-                  • AI 추천 채용
-                </DropdownItem>
-              </DropdownContent>
-            </Dropdown>
-          )}
-        </CategoryWrapper>
+        <Category onClick={() => navigate("/recruit")}>구인 / 구직</Category>
+        <Category onClick={() => navigate("/resume")}>이력서</Category>
+        <Category onClick={() => navigate("/community")}>커뮤니티</Category>
+        <Category onClick={() => navigate("/infoboard/trend")}>정보게시판</Category>
+        <Category onClick={() => navigate("/mypage")}>마이페이지</Category>
 
-        <CategoryWrapper>
-          <Category>이력서</Category>
-        </CategoryWrapper>
-
-        <CategoryWrapper>
-          <Category onClick={() => navigate("/community")}>커뮤니티</Category>
-        </CategoryWrapper>
-
-        {/* 정보게시판 */}
-        <CategoryWrapper
-          onMouseOver={() => handleMouseOver("infoboard")}
-          onMouseOut={handleMouseOut}
-        >
-          <Category onClick={() => navigate("/infoboard/support")}>
-            정보게시판
+        {isLoggedIn ? (
+          <Category onClick={handleLogout} style={{ cursor: "pointer" }}>
+            로그아웃
           </Category>
-          {activeDropdown === "infoboard" && (
-            <Dropdown>
-              <DropdownContent>
-                <DropdownItem onClick={() => navigate("/infoboard/education")}>
-                  • 디지털 기술 교육
-                </DropdownItem>
-                <DropdownItem onClick={() => navigate("/infoboard/trend")}>
-                  • 취업 시장 트렌드
-                </DropdownItem>
-                <DropdownItem onClick={() => navigate("/infoboard/senior")}>
-                  • 중장년 직무 추천
-                </DropdownItem>
-              </DropdownContent>
-            </Dropdown>
-          )}
-        </CategoryWrapper>
-
-
-        <CategoryWrapper>
-          <Category onClick={() => navigate("/mypage")}>마이페이지</Category>
-        </CategoryWrapper>
-
-        <CategoryWrapper>
-          <Category>로그아웃</Category>
-        </CategoryWrapper>
+        ) : (
+          <Category onClick={() => navigate("/login")} style={{ cursor: "pointer" }}>
+            로그인
+          </Category>
+        )}
       </Navigation>
     </Container>
   );

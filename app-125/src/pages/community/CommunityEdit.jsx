@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios"; 
+import axios from "axios";
 import Header from "../../components/Header";
 
 const PageWrapper = styled.div`
@@ -34,7 +34,7 @@ const EditorWrapper = styled.div`
 
 const EditorToolbar = styled.div`
   display: flex;
-  justify-content:center;
+  justify-content: center;
   gap: 12px;
   background-color: #f7f7f7;
   padding: 8px 16px;
@@ -85,7 +85,6 @@ const SubmitButton = styled.button`
   background-color: #f2a154;
   color: white;
   border: none;
-
   padding: 12px 28px;
   font-size: 16px;
   font-weight: bold;
@@ -96,32 +95,51 @@ const SubmitButton = styled.button`
   }
 `;
 
-function CommunityWrite() {
+function CommunityEdit() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const postData = location.state;
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  useEffect(() => {
+    if (postData) {
+      setTitle(postData.title);
+      setContent(postData.content);
+    } else {
+      // 백업: URL 직접 접근 시 데이터 fetch
+      axios.get(`/api/community/${id}/edit`)
+        .then((res) => {
+          setTitle(res.data.title);
+          setContent(res.data.content);
+        })
+        .catch((err) => {
+          console.error("수정용 게시글 불러오기 실패:", err);
+          alert("게시글을 불러오지 못했습니다.");
+          navigate("/community");
+        });
+    }
+  }, [id, postData, navigate]);
+
+  const handleUpdate = async () => {
     if (!title.trim() || !content.trim()) {
       alert("제목과 내용을 모두 입력해주세요.");
       return;
     }
 
     try {
-      const response = await axios.post("http://127.0.0.1:3002/api/community/create", {
+      await axios.post(`/api/community/${id}/edit`, {
         title,
-        content,
-        user_id: 1 // ⚠️ 유저 연결 전이므로 임시 하드코딩
+        content
       });
 
-      console.log("게시글 등록 성공:", response.data);
-      alert("작성 완료!");
-
-      navigate("/community");
-
-    } catch (error) {
-      console.error("게시글 등록 실패:", error);
-      alert("게시글 등록에 실패했습니다.");
+      alert("수정 완료!");
+      navigate(`/community/${id}`);
+    } catch (err) {
+      console.error("게시글 수정 실패:", err);
+      alert("게시글 수정에 실패했습니다.");
     }
   };
 
@@ -146,7 +164,7 @@ function CommunityWrite() {
           </EditorToolbar>
 
           <EditorTextarea
-            placeholder="Tell your story..."
+            placeholder="내용을 입력해주세요"
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
@@ -154,10 +172,10 @@ function CommunityWrite() {
 
         <Divider />
 
-        <SubmitButton onClick={handleSubmit}>작성 완료</SubmitButton>
+        <SubmitButton onClick={handleUpdate}>수정 완료</SubmitButton>
       </PageWrapper>
     </>
   );
 }
 
-export default CommunityWrite;
+export default CommunityEdit;

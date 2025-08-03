@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from "react";
+import axios from "../../api/axiosInstance";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { AiOutlineEye } from "react-icons/ai";
 import Header from "../../components/Header";
-import communityPosts from "../../data/communityPosts";
+import DeleteConfirmModal from "../../modal/DeleteConfirmModal";
+import { FiMoreHorizontal, FiEdit, FiTrash2 } from "react-icons/fi";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 import profileImg from "../../img/profile.png";
 
-
-// 이미지 import
-import defaultLike from "../../img/defaultLike.png";
-import like from "../../img/Like.png";
-import defaultScrap from "../../img/defaultScrap.png";
-import scrap from "../../img/Scrap.png";
-
-// 생략: import문 동일
 
 const PageWrapper = styled.div`
   padding: 140px 24px 80px;
@@ -43,18 +39,45 @@ const MetaInfo = styled.div`
   gap: 10px;
 `;
 
-const RightLike = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+const MoreMenuWrapper = styled.div`
+  position: relative;
   margin-top: 30px;
-  gap: 4px;
-
 `;
 
-const LikeCount = styled.span`
-  font-size: 12px;
-  color: #666;
+const MoreButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+`;
+
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: 28px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+`;
+
+const MenuItem = styled.button`
+  width: 80px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
 `;
 
 const Divider = styled.hr`
@@ -84,10 +107,16 @@ const ReactionBar = styled.div`
   margin-bottom: 30px;
 `;
 
-const ReactionIcon = styled.img`
-  width: 24px;
-  height: 24px;
+const ReactionIcon = styled.div`
+  font-size: 24px;
   cursor: pointer;
+  color: ${props => (props.liked ? "red" : "#888")};
+`;
+
+const ScrapIcon = styled.div`
+  font-size: 24px;
+  cursor: pointer;
+  color: ${props => (props.scrapped ? "#f2a65a" : "#888")};
 `;
 
 const CommentSection = styled.div`
@@ -157,104 +186,188 @@ const CommentText = styled.div`
 const CommentDate = styled.div`
   font-size: 12px;
   color: #aaa;
-`;
-
-
+`; 
 
 function CommunityDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
   const [liked, setLiked] = useState(false);
   const [scrapped, setScrapped] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  // 게시글 불러오기
   useEffect(() => {
-    const found = communityPosts.find((item) => item.id === parseInt(id));
-    if (found) setPost(found);
+    const fetchPost = async () => {
+      try {
+        const res = await axios.get(`/api/community/${id}`);
+        setPost(res.data.post);
+        setComments(res.data.comments || []);
+      } catch (error) {
+        console.error("게시글 불러오기 실패:", error);
+      }
+    };
+
+    const fetchScrapStatus = async () => {
+      try {
+        const res = await axios.get("/api/mypage/scraps");
+        const isScrapped = res.data.scraps.some(
+          (scrap) => scrap.type === "community" && scrap.id === parseInt(id)
+        );
+        setScrapped(isScrapped);
+      } catch (error) {
+        console.error("스크랩 여부 확인 실패:", error);
+      }
+    };
+
+    fetchPost();
+    fetchScrapStatus();
   }, [id]);
 
-  const toggleLike = () => setLiked((prev) => !prev);
-  const toggleScrap = () => setScrapped((prev) => !prev);
-
-  const handleCommentSubmit = () => {
-    if (newComment.trim() === "") return;
-    alert("댓글 등록: " + newComment);
-    setNewComment("");
+  // 좋아요 토글
+  const toggleLike = async () => {
+    try {
+      if (liked) {
+        await axios.delete(`/api/community/${id}/like`);
+      } else {
+        await axios.post(`/api/community/${id}/like`);
+      }
+      setLiked((prev) => !prev);
+    } catch (error) {
+      console.error("좋아요 요청 실패:", error);
+    }
   };
+
+  // 스크랩 토글
+  const toggleScrap = async () => {
+    try {
+      if (scrapped) {
+        await axios.delete(`/api/mypage/scraps/${id}?type=community`);
+        setScrapped(false);
+      } else {
+        await axios.post(`/api/community/${id}/scrap`);
+        setScrapped(true);
+      }
+    } catch (error) {
+      console.error("스크랩 요청 실패:", error);
+    }
+  };
+
+  // 댓글 등록
+  const handleCommentSubmit = async () => {
+    if (!newComment.trim()) return;
+    try {
+      const res = await axios.post(`/api/community/${id}/comments`, {
+        content: newComment,
+      });
+      setComments((prev) => [...prev, res.data]);
+      setNewComment("");
+    } catch (error) {
+      console.error("댓글 등록 실패:", error);
+    }
+  };
+
+  // 게시글 삭제
+  const handleDelete = async () => {
+    try {
+      await axios.get(`/api/community/${id}/delete`);
+      navigate("/community");
+    } catch (error) {
+      console.error("삭제 실패:", error);
+    }
+  };
+  const handleClose = () => setShowDeleteModal(false);
 
   if (!post) return null;
 
   return (
     <>
-     <Header />
-    <PageWrapper>
-      <TitleWrapper>
-        <div>
-          <Title>{post.title}</Title>
-          <MetaInfo>
-            <AiOutlineEye />
-            <span>{post.views}</span>
-            <span>|</span>
-            <span>{post.date}</span>
-          </MetaInfo>
-        </div>
-        <RightLike>
-          <img
-            src={liked ? like : defaultLike}
-            alt="좋아요"
-            onClick={toggleLike}
-            style={{ width: "20px", height: "20px", cursor: "pointer" }} 
+      <Header />
+      <PageWrapper>
+        <TitleWrapper>
+          <div>
+            <Title>{post.title}</Title>
+            <MetaInfo>
+              <AiOutlineEye />
+              <span>{post.views ?? 0}</span>
+              <span>|</span>
+              <span>{post.created_at?.slice(0, 10)}</span>
+            </MetaInfo>
+          </div>
+
+          <MoreMenuWrapper>
+            <MoreButton onClick={() => setShowMenu((prev) => !prev)}>
+              <FiMoreHorizontal />
+            </MoreButton>
+            {showMenu && (
+              <DropdownMenu>
+                <MenuItem
+                  onClick={() =>
+                    navigate(`/community/${id}/edit`, { state: post })
+                  }
+                >
+                  <FiEdit /> 수정
+                </MenuItem>
+                <MenuItem onClick={() => setShowDeleteModal(true)}>
+                  <FiTrash2 /> 삭제
+                </MenuItem>
+              </DropdownMenu>
+            )}
+          </MoreMenuWrapper>
+        </TitleWrapper>
+
+        <Divider />
+        {post.thumbnail && <Thumbnail src={post.thumbnail} />}
+        <Content>{post.content}</Content>
+
+
+        <ReactionBar>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <ReactionIcon liked={liked} onClick={toggleLike}>
+              {liked ? <AiFillHeart /> : <AiOutlineHeart />}
+            </ReactionIcon>
+            <span style={{ fontSize: "14px", color: "#666" }}>{post.like_count}</span>
+          </div>
+
+          <ScrapIcon scrapped={scrapped} onClick={toggleScrap}>
+            {scrapped ? <BsBookmarkFill /> : <BsBookmark />}
+          </ScrapIcon>
+        </ReactionBar>
+
+
+        <Divider />
+        <CommentSection>
+          <h4>댓글</h4>
+          {comments.map((comment) => (
+            <CommentBox key={comment.comment_id}>
+              <CommentProfile src={profileImg} />
+              <CommentBody>
+                <CommentAuthor>유저 {comment.user_id}</CommentAuthor>
+                <CommentText>{comment.content}</CommentText>
+                <CommentDate>{comment.created_at?.slice(0, 10)}</CommentDate>
+              </CommentBody>
+            </CommentBox>
+          ))}
+          <CommentInput
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="댓글을 입력하세요"
           />
-          <LikeCount>{post.likes + (liked ? 1 : 0)}</LikeCount>
-        </RightLike>
-      </TitleWrapper>
+          <SubmitButton onClick={handleCommentSubmit}>댓글 등록</SubmitButton>
+        </CommentSection>
+      </PageWrapper>
 
-      <Divider />
-
-      {post.thumbnail && <Thumbnail src={post.thumbnail} alt="썸네일" />}
-      
-
-      <Content>{post.content}</Content>
-
-      <ReactionBar>
-        <ReactionIcon
-          src={liked ? like : defaultLike}
-          onClick={toggleLike}
-          alt="좋아요"
+      {showDeleteModal && (
+        <DeleteConfirmModal
+            title="정말 삭제하시겠습니까?"
+            message="삭제된 게시글은 복구할 수 없습니다."
+            onClose={handleClose}
+            onConfirm={handleDelete}
         />
-        <ReactionIcon
-          src={scrapped ? scrap : defaultScrap}
-          onClick={toggleScrap}
-          alt="스크랩"
-          style={{ width: "18px", height: "24px", cursor: "pointer" }}
-        />
-      </ReactionBar>
-
-      <Divider />
-
-      <CommentSection>
-        <h4>댓글</h4>
-        {post.replies?.map((reply, idx) => (
-          <CommentBox key={idx}>
-            <CommentProfile src={profileImg} alt="프로필" />
-            <CommentBody>
-              <CommentAuthor>{reply.author}</CommentAuthor>
-              <CommentText>{reply.text}</CommentText>
-              <CommentDate>{reply.date}</CommentDate>
-            </CommentBody>
-          </CommentBox>
-        ))}
-
-        <CommentInput
-          placeholder="댓글을 입력하세요"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-        />
-        <SubmitButton onClick={handleCommentSubmit}>댓글 등록</SubmitButton>
-      </CommentSection>
-
-    </PageWrapper>
-
+      )}
     </>
   );
 }

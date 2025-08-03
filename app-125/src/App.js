@@ -1,4 +1,14 @@
-import './App.css';
+import React from 'react';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Select from './pages/interview/Select';
+import Result from './pages/interview/Result';
+import QuestionList from './pages/interview/QuestionList';
+import RecommendList from './pages/resume/RecommendList';
+import ResumeList from './pages/resume/ResumeList';
+import Example from './pages/resume/Example';
+import Detail from './pages/resume/Detail';
+import Create from './pages/resume/ResumeCreate';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainPage from './pages/Mainpage';
 import GlobalStyle from './Globalstyle';
@@ -13,6 +23,7 @@ import SeniorJobDetail from './pages/infoboard/SeniorJobDetail';
 import CommunityList from './pages/community/CommunityList';
 import CommunityDetail from './pages/community/CommunityDetail';
 import CommunityWrite from './pages/community/CommunityWrite';
+import CommunityEdit from './pages/community/CommunityEdit';
 import MyPageLayout from './components/mypage/MyPageLayout';
 import MyProfile from './pages/mypage/MyProfile';
 import MyApplyHistory from './pages/mypage/MyApplyHistory';
@@ -21,13 +32,16 @@ import MyScrapPost from './pages/mypage/MyScrapPost';
 import ChangePassword from './pages/mypage/ChangePassword';
 import AccountManagement from './pages/mypage/AccountManagement';
 
-
 function App() {
   return (
     <BrowserRouter>
     <GlobalStyle />
       <Routes>
         <Route path="/" element={<MainPage />} />
+
+        {/* 유저 */}
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
 
         {/* 구인/구직 */}
         <Route path='/recruit' element={<RecruitListPage />} />
@@ -38,9 +52,11 @@ function App() {
         <Route path='/community' element={<CommunityList />}/>
         <Route path='/community/:id' element={<CommunityDetail />}/>
         <Route path='/community/write' element={<CommunityWrite />}/>
+        <Route path="/community/:id/edit" element={<CommunityEdit />} />
+
 
         {/* 정보게시판 */}
-        <Route path="/infoboard/education" element={<DigitalEducation />} />
+        <Route path="/infoboard/edu" element={<DigitalEducation />} />
         <Route path="/infoboard/trend" element={<EmploymentTrend />} />
         <Route path="/infoboard/trend/:id" element={<EmploymentTrendDetail />} />
         <Route path="/infoboard/senior" element={<SeniorJobRecommend />} />

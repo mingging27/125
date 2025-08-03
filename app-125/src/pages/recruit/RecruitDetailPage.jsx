@@ -1,9 +1,11 @@
-import React from 'react';
 import styled from 'styled-components';
 import Header from '../../components/Header';
 import InterviewQuestionSection from '../../components/interview/InterviewQuestionSection';
 import { useParams } from 'react-router-dom';
-import recruitData from '../../data/mockRecruitData';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+
 
 const Container = styled.div`
   max-width: 1178px;
@@ -111,8 +113,23 @@ const WebsiteButtonStyled = styled(DetailButtonStyled)`
 
 const RecruitDetailPage = () => {
   const { id } = useParams();
-  const job = recruitData.find(item => item.job_post_id === parseInt(id));
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:3002/api/jobPosts/${id}`)
+      .then((res) => {
+        setJob(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) return <p>로딩 중...</p>;
   if (!job) return <p>해당 채용 공고를 찾을 수 없습니다.</p>;
 
   return (
@@ -123,27 +140,26 @@ const RecruitDetailPage = () => {
           <Title>채용 정보</Title>
           <Container>
             <LeftSection>
-              <Company>기업1</Company>
-              <JobTitle>[기업1] 2025 상반기 경력 채용</JobTitle>
+              <Company>{job.company}</Company>
+              <JobTitle>{job.title}</JobTitle>
               <Divider />
               <SectionWrapper>
                 <Section>
                   <SectionTitle>지원자격</SectionTitle>
-                  <Item><Label>경력</Label><Value>경력 직무별 상이</Value></Item>
-                  <Item><Label>학력</Label><Value>고졸이상 직무별 상이</Value></Item>
-                  <Item><Label>스킬</Label><Value>JAVA, JSP, MySQL, Oracle, Excel, CREO</Value></Item>
-                  <Item><Label>우대</Label><Value>국가 유공자</Value></Item>
-                  <Item><Label>분야</Label><Value>AI</Value></Item>
-                  <Item><Label>연령</Label><Value>40세~62세</Value></Item>
+                  <Item><Label>경력</Label><Value>{job.career}</Value></Item>
+                  <Item><Label>학력</Label><Value>{job.education}</Value></Item>
+                  <Item><Label>스킬</Label><Value>{job.skills}</Value></Item>
+                  <Item><Label>우대</Label><Value>{job.preference}</Value></Item>
+                  <Item><Label>분야</Label><Value>{job.job_field}</Value></Item>
+                  <Item><Label>연령</Label><Value>{job.min_age}세~{job.max_age}세</Value></Item>
                 </Section>
 
                 <Section>
                   <SectionTitle>근무조건</SectionTitle>
-                  <Item><Label>고용형태</Label><Value>정규직 수습 3개월</Value></Item>
-                  <Item><Label></Label><Value>계약직 근무기간 1년</Value></Item>
-                  <Item><Label>급여</Label><Value>회사내규에 따름</Value></Item>
-                  <Item><Label>지역</Label><Value>서울시 강남구, 강동구, 성북구, 양천구, 경남 양산시</Value></Item>
-                  <Item><Label>시간</Label><Value>주 5일 (월~금) 8:30~17:30</Value></Item>
+                  <Item><Label>고용형태</Label><Value>{job.employment_type}</Value></Item>
+                  <Item><Label>급여</Label><Value>{job.salary_info}</Value></Item>
+                  <Item><Label>지역</Label><Value>{job.location_city}</Value></Item>
+                  <Item><Label>시간</Label><Value>{job.work_hour}</Value></Item>
                 </Section>
               </SectionWrapper>
             </LeftSection>
@@ -155,7 +171,6 @@ const RecruitDetailPage = () => {
           </ButtonWrap>
 
           <InterviewQuestionSection />
-
         </InnerWrapper>
       </OuterWrapper>
     </>
@@ -163,3 +178,4 @@ const RecruitDetailPage = () => {
 };
 
 export default RecruitDetailPage;
+

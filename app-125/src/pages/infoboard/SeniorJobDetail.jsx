@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { HiOutlineEye } from "react-icons/hi";
 import Header from "../../components/Header";
 
@@ -53,7 +54,6 @@ const Tag = styled.div`
   margin-bottom: 16px;
 `;
 
-
 const JobDesc = styled.div`
   font-size: 16px;
   min-height: 180px;
@@ -61,6 +61,7 @@ const JobDesc = styled.div`
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   background-color: white;
+  white-space: pre-line; /* 줄바꿈 처리 */
 `;
 
 const HashtagGroup = styled.div`
@@ -99,18 +100,28 @@ function SeniorJobDetail() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    // 임시 데이터
-    setData({
-      id,
-      title: "기업 1-추천합니다",
-      views: 1000,
-      date: "2025-05-21",
-      field: "기획 / PM",
-      companyDesc: "기업 설명",
-      jobSummary: "직무 요약",
-      hashtags: ["#40대", "#50대", "#기획"],
-      siteUrl: "https://example.com",
-    });
+    axios
+      .get("http://127.0.0.1:3002/api/infoPosts?category=info_recommend")
+      .then((res) => {
+        const matched = res.data.find(
+          (item) => String(item.info_post_id) === id
+        );
+        if (matched) {
+          setData({
+            title: matched.title,
+            views: 1234, // 아직 API에 없으면 임시로
+            date: new Date(matched.published_at).toLocaleDateString(),
+            field: "직무 추천", 
+            companyDesc: "", // 없으면 생략
+            jobSummary: matched.content,
+            hashtags: [], // 없다면 빈 배열
+            siteUrl: matched.source_url || "", // 없으면 비워둠
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("데이터 가져오기 실패", err);
+      });
   }, [id]);
 
   if (!data) return null;
@@ -124,7 +135,9 @@ function SeniorJobDetail() {
           <TopInfo>
             <InfoTitle>{data.title}</InfoTitle>
             <Meta>
-              <span><HiOutlineEye /> {data.views}</span>
+              <span>
+                <HiOutlineEye /> {data.views}
+              </span>
               <span>{data.date} 작성</span>
             </Meta>
           </TopInfo>
@@ -133,17 +146,21 @@ function SeniorJobDetail() {
 
           <JobDesc>{data.jobSummary}</JobDesc>
 
-          <HashtagGroup>
-            {data.hashtags.map((tag, index) => (
-              <span key={index}>{tag}</span>
-            ))}
-          </HashtagGroup>
+          {data.hashtags.length > 0 && (
+            <HashtagGroup>
+              {data.hashtags.map((tag, index) => (
+                <span key={index}>{tag}</span>
+              ))}
+            </HashtagGroup>
+          )}
 
-          <ButtonWrapper>
-            <GoSiteButton onClick={() => window.open(data.siteUrl)}>
-              사이트 바로가기 →
-            </GoSiteButton>
-          </ButtonWrapper>
+          {data.siteUrl && (
+            <ButtonWrapper>
+              <GoSiteButton onClick={() => window.open(data.siteUrl)}>
+                사이트 바로가기 →
+              </GoSiteButton>
+            </ButtonWrapper>
+          )}
         </CardWrapper>
       </PageWrapper>
     </>
