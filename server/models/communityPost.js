@@ -54,5 +54,12 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  CommunityPost.associate = function(models) {
+    CommunityPost.hasMany(models.Scrap, {
+      foreignKey: 'community_post_id',
+      as: 'scraps'
+    });
+  };
+
   return CommunityPost;
 };
