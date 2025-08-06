@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
     );
 
     // 4. 응답
-    res.status(200).json({ message: '로그인 성공', token });
+    res.status(200).json({ message: '로그인 성공', token, userId: user.get('user_id') });
 
   } catch (error) {
     console.error(error);
