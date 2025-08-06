@@ -48,10 +48,10 @@ router.post('/create', controller.createPost);
 router.get('/:id', controller.getPostDetail);
 
 // 게시글 수정 (POST로 요청 - /:id/edit)
-//router.post('/:id/edit', controller.updatePost);
+router.post('/:id/edit', controller.updatePost);
 
 // 게시글 수정용 데이터 조회 (edit용 json)
-router.get('/:id/edit', controller.editPost);
+//router.get('/:id/edit', controller.editPost);
 
 // 게시글 삭제 (POST 방식 사용)
 router.get('/:id/delete', controller.deletePost);
