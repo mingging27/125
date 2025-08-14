@@ -6,9 +6,14 @@ exports.createResume = async (req, res) => {
   try {
     const userId = req.user.userId;
 
+    if (!req.body.resume_title || req.body.resume_title.trim() === '') {
+      return res.status(400).json({ message: '제목은 필수 입력입니다.' });
+    }
+
     // 1) Resume 단독 생성
     const resume = await Resume.create({
       ...req.body,
+      resume_title: req.body.resume_title,
       user_id: userId,
     });
 
@@ -63,13 +68,15 @@ exports.getAllResumes = async (req, res) => {
     const resumes = await Resume.findAll({
       where: { user_id: req.user.userId },
       order: [['created_at', 'DESC']],
-      include: [
-        { model: UserCertificate, as: 'certificates', attributes: ['certificate_name', 'acquisition_year'] },
-        { model: UserLanguageScore, as: 'languageScores', attributes: ['test_name', 'score', 'acquisition_year'] },
-        { model: UserPreferredDay, as: 'preferredDays', attributes: ['day'] }
-      ],
+      attributes:['resume_id', 'resume_title', 'created_at']
     });
-    res.json({ resumes });
+    const result = resumes.map(r => ({
+    resume_id: r.resume_id,
+    title: r.resume_title,
+    created_at: r.created_at,
+    }));
+
+    res.json({ resumes: result });
   } catch (err) {
     console.error('이력서 목록 조회 에러:', err);
     res.status(500).json({ message: '서버 오류' });
@@ -105,7 +112,10 @@ exports.updateResume = async (req, res) => {
 
     if (!resume) return res.status(404).json({ message: '이력서 없음' });
 
-    await resume.update(req.body);
+    await resume.update({
+      ...req.body,
+      resume_title: req.body.resume_title
+    });
     res.json({ message: '이력서 수정 완료', resume });
   } catch (err) {
     console.error('이력서 수정 에러:', err);
