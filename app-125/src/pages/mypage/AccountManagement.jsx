@@ -1,9 +1,8 @@
-// src/pages/mypage/AccountManagement.jsx
-
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ConfirmModal from "../../modal/ConfirmModal"; 
+import axiosInstance from "../../api/axiosInstance"; 
 
 const Section = styled.div`
   padding: 32px 0;
@@ -51,17 +50,26 @@ function AccountManagement() {
   const navigate = useNavigate();
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
-  const handleWithdraw = () => {
-    // 실제 탈퇴 처리 로직 (예: API 호출 등)
-    console.log("회원 탈퇴 처리됨");
 
-    // 얼럿 메시지 표시
-    alert("회원 탈퇴가 완료되었습니다. 그동안 이용해주셔서 감사합니다.");
+  const handleWithdraw = async () => {
+    try {
+      // 회원 탈퇴 처리 요청
+      await axiosInstance.put("/api/user/mypage/update", {
+        is_out: 1,
+      });
 
-    setShowWithdrawModal(false);
+      alert("회원 탈퇴가 완료되었습니다. 그동안 이용해주셔서 감사합니다.");
+      setShowWithdrawModal(false);
 
-    // 홈 또는 로그인 페이지로 이동
-    navigate("/");
+      // 토큰 삭제 (선택)
+      localStorage.removeItem("token");
+
+      // 홈 또는 로그인 페이지로 이동
+      navigate("/");
+    } catch (error) {
+      console.error("회원 탈퇴 실패:", error);
+      alert("탈퇴 처리 중 오류가 발생했습니다.");
+    }
   };
 
   return (

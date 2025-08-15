@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
+import axiosInstance from "../../api/axiosInstance";
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,7 +17,7 @@ const TopBar = styled.div`
 const Title = styled.h2`
   font-size: 24px;
   font-weight: 700;
-  margin-top :0;
+  margin-top: 0;
   margin-bottom: 40px;
 `;
 
@@ -25,7 +26,6 @@ const SortOptions = styled.div`
 `;
 
 const SortButton = styled.button`
-
   padding: 6px 14px;
   border: 1px solid #5EC27D;
   background-color: ${props => (props.active ? '#5EC27D' : 'white')};
@@ -37,7 +37,6 @@ const SortButton = styled.button`
     opacity: 0.9;
   }
 `;
-
 
 const Grid = styled.div`
   display: grid;
@@ -81,14 +80,29 @@ const MoreInfo = styled.a`
   }
 `;
 
-const mockData = new Array(9).fill({
-  title: "성실한 직원 구합니다",
-  field: "AI",
-  deadline: "2024.02.17"
-});
+const EmptyText = styled.div`
+  text-align: center;
+  color: #888;
+  margin-top: 40px;
+  font-size: 16px;
+`;
 
 function MyApplyHistory() {
-  const [sortBy, setSortBy] = useState("applied"); // or "deadline"
+  const [sortBy, setSortBy] = useState("applied"); // "applied" or "deadline"
+  const [applications, setApplications] = useState([]);
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const response = await axiosInstance.get("/api/mypage/applications");
+        setApplications(response.data.applications);
+      } catch (error) {
+        console.error("지원 현황 불러오기 실패:", error);
+      }
+    };
+
+    fetchApplications();
+  }, []);
 
   return (
     <Wrapper>
@@ -110,16 +124,20 @@ function MyApplyHistory() {
         </SortOptions>
       </TopBar>
 
-      <Grid>
-        {mockData.map((item, index) => (
-          <Card key={index}>
-            <JobTitle>{item.title}</JobTitle>
-            <InfoText>분야: {item.field}</InfoText>
-            <InfoText>마감 날짜: {item.deadline}</InfoText>
-            <MoreInfo href="#">More Info</MoreInfo>
-          </Card>
-        ))}
-      </Grid>
+      {applications.length === 0 ? (
+        <EmptyText>지원 내역이 없습니다.</EmptyText>
+      ) : (
+        <Grid>
+          {applications.map((item, index) => (
+            <Card key={index}>
+              <JobTitle>{item.title}</JobTitle>
+              <InfoText>분야: {item.field}</InfoText>
+              <InfoText>마감 날짜: {item.deadline}</InfoText>
+              <MoreInfo href="#">More Info</MoreInfo>
+            </Card>
+          ))}
+        </Grid>
+      )}
     </Wrapper>
   );
 }

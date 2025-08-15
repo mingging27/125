@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Header from "../../components/Header";
-import { Link, useNavigate } from "react-router-dom";
-import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
-import ScrapIcon from "../../img/defaultScrap.png";
-import communityPosts from "../../data/communityPosts"; // 더미 데이터
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { AiOutlineHeart } from "react-icons/ai";
+import axios from "axios";
 
 const PageWrapper = styled.div`
   padding: 140px 24px 80px;
@@ -28,14 +27,13 @@ const TopBar = styled.div`
 
 const FilterWrapper = styled.div`
   display: flex;
-
 `;
 
 const FilterButton = styled.button`
   padding: 6px 14px;
   border: 1px solid #f2a65a;
-  background-color: ${props => (props.active ? '#f2a65a' : 'white')};
-  color: ${props => (props.active ? 'white' : '#f2a65a')};
+  background-color: ${(props) => (props.active ? "#f2a65a" : "white")};
+  color: ${(props) => (props.active ? "white" : "#f2a65a")};
   font-weight: 500;
   cursor: pointer;
 
@@ -88,8 +86,6 @@ const PostPreview = styled.p`
   margin-bottom: 10px;
 `;
 
-
-
 const PostMeta = styled.div`
   font-size: 12px;
   color: #888;
@@ -118,32 +114,35 @@ const ThumbnailWrapper = styled.div`
   margin-left: 16px;
 `;
 
-const Thumbnail = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 6px;
-`;
-
-const ScrapIconImg = styled.img`
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 14px;
-  height: 20px;
-  opacity: 0.7;
-  cursor: pointer;
-`;
-
-
-
 function CommunityList() {
   const navigate = useNavigate();
-  const [sortType, setSortType] = useState("latest"); // "latest" or "popular"
+  const location = useLocation();
+  const [posts, setPosts] = useState([]);
+  const [sortType, setSortType] = useState("latest");
 
-  const sortedPosts = [...communityPosts].sort((a, b) => {
-    if (sortType === "popular") return b.likes - a.likes;
-    return b.id - a.id; // 최신순 (id가 높을수록 최신)
+  const query = new URLSearchParams(location.search);
+  const search = query.get("search") || "";
+
+  // 게시글 불러오기 (search에 따라 API 변경)
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const url = search
+          ? `http://127.0.0.1:3002/api/community?search=${encodeURIComponent(search)}`
+          : `http://127.0.0.1:3002/api/community`;
+        const res = await axios.get(url);
+        setPosts(res.data);
+      } catch (error) { 
+        console.error("게시글 불러오기 실패:", error);
+      }
+    };
+
+    fetchPosts();
+  }, [search]);
+
+  const sortedPosts = [...posts].sort((a, b) => {
+    if (sortType === "popular") return b.like_count - a.like_count;
+    return b.community_post_id - a.community_post_id;
   });
 
   return (
@@ -174,31 +173,23 @@ function CommunityList() {
         </TopBar>
 
         {sortedPosts.map((post) => (
-        <PostCard to={`/community/${post.id}`} key={post.id}>
-          <PostContent>
-            <PostTitle>{post.title}</PostTitle>
-            <PostPreview>{post.preview}</PostPreview>
-            <PostMeta>
-              <MetaLeft>
-                <MetaItem>
-                  <AiOutlineEye />
-                  <span>{post.views}</span>
-                </MetaItem>
-                <MetaItem>
-                  <AiOutlineHeart />
-                  <span>{post.likes}</span>
-                </MetaItem>
-                <span>{post.createdAt}</span>
-              </MetaLeft>
-            </PostMeta>
-          </PostContent>
+          <PostCard to={`/community/${post.community_post_id}`} key={post.community_post_id}>
+            <PostContent>
+              <PostTitle>{post.title}</PostTitle>
+              <PostPreview>{post.content.slice(0, 50)}...</PostPreview>
+              <PostMeta>
+                <MetaLeft>
+                  <MetaItem>
+                    <AiOutlineHeart />
+                    <span>{post.like_count}</span>
+                  </MetaItem>
+                  <span>{post.created_at.slice(0, 10)}</span>
+                </MetaLeft>
+              </PostMeta>
+            </PostContent>
 
-          <ThumbnailWrapper>
-            {post.thumbnail && <Thumbnail src={post.thumbnail} alt="썸네일" />}
-            {/* <ScrapIconImg src={ScrapIcon} alt="스크랩" /> */}
-          </ThumbnailWrapper>
-        </PostCard>
-
+            <ThumbnailWrapper />
+          </PostCard>
         ))}
       </PageWrapper>
     </>

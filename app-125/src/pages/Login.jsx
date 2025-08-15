@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import Header from '../components/Header';
+
 
 const Content = styled.div`
     height: 1000px;
@@ -82,26 +85,80 @@ const Submit = styled.button`
 `;
 
 function Login() {
+    const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+
+    const navigate = useNavigate();
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!loginId.trim() || !password.trim()) {
+    alert("아이디와 비밀번호를 모두 입력해주세요.");
+    return;
+  }
+
+    const loginData = {
+      login_id: loginId,
+      password: password,
+    };
+
+    try {
+      const response = await fetch("http://127.0.0.1:3002/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
+
+      const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message || "로그인 실패");
+      return;
+    }
+
+    alert(data.message || "로그인 성공");
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+    }
+    navigate("/");
+  } catch (error) {
+    alert("로그인 중 오류가 발생했습니다.");
+  }
+  };
+
     return (
     <>
-        <Content>
-            <PositionWrap>
-                <Title>로그인</Title>
-                <FormDiv>
-            <Form>
-                <InputDiv>
-                    <Label>아이디</Label>
-                    <Input type="text"/>
-                </InputDiv>
-                <InputDiv>
-                    <Label>비밀번호</Label>
-                    <Input type="text"/>
-                </InputDiv>
-                <Submit type="submit">로그인</Submit>
+      <Header/>
+      <Content>
+        <PositionWrap>
+          <Title>로그인</Title>
+          <FormDiv>
+            <Form onSubmit={handleSubmit}>
+              <InputDiv>
+                <Label>아이디</Label>
+                <Input
+                  type="text"
+                  value={loginId}
+                  onChange={(e) => setLoginId(e.target.value)}
+                />
+              </InputDiv>
+              <InputDiv>
+                <Label>비밀번호</Label>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </InputDiv>
+              <Submit type="submit">로그인</Submit>
             </Form>
-            </FormDiv>
-            </PositionWrap>
-        </Content>
+          </FormDiv>
+        </PositionWrap>
+      </Content>
     </>
   );
 }

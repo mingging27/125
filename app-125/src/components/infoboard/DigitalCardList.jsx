@@ -1,5 +1,7 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+
 
 const Grid = styled.div`
   display: grid;
@@ -57,26 +59,41 @@ const ApplyButton = styled.button`
   }
 `;
 
-const dummyPrograms = [
-  { id: 1, title: "전적 지원 프로그램", period: "30일" },
-  { id: 2, title: "무료 코딩 강의", period: "14일" },
-  { id: 3, title: "IT 재취업 특강", period: "7일" },
-  { id: 4, title: "중장년 코딩캠프", period: "60일" }
-];
-
 function DigitalCardList() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:3002/api/infoPosts") // category 없이 전체 요청
+      .then(res => {
+        console.log("받은 데이터:", res.data);
+        setPosts(res.data);
+      })
+      .catch(err => {
+        console.error("에러:", err);
+      });
+
+  }, []);
 
   return (
     <Grid>
-      {dummyPrograms.map(program => (
-        <Card>
-          <ImageBox />
-          <Content>
-            <Title>{program.title}</Title>
-            <Period>교육기간 {program.period}</Period>
-            <ApplyButton>수강신청</ApplyButton>
-          </Content>
-        </Card>
+      {posts.map((program) => (
+      <Card key={program.info_post_id}>
+        <ImageBox />
+        <Content>
+          <Title>{program.title}</Title>
+          <Period>{new Date(program.published_at).toLocaleDateString()}</Period>
+          <a
+            href={program.source_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <ApplyButton>바로가기</ApplyButton>
+          </a>
+        </Content>
+      </Card>
+
       ))}
     </Grid>
   );

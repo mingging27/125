@@ -1,6 +1,7 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";  
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Grid = styled.div`
   display: grid;
@@ -15,52 +16,85 @@ const Card = styled.div`
   overflow: hidden;
   text-align: center;
   padding: 20px 16px;
-  cursor: pointer; 
+  cursor: pointer;
   transition: transform 0.2s ease;
 
   &:hover {
-    transform: translateY(-4px); 
+    transform: translateY(-4px);
   }
 `;
 
-const Thumbnail = styled.div`
-  background-color: #d9d9d9;
-  height: 100px;
-  border-radius: 16px;
-  margin-bottom: 16px;
-`;
+// const Thumbnail = styled.img`
+//   background-color: #d9d9d9;
+//   height: 100px;
+//   width: 100%;
+//   object-fit: cover;
+//   border-radius: 16px;
+//   margin-bottom: 16px;
+// `;
 
 const Title = styled.div`
   font-weight: 600;
   font-size: 16px;
 `;
 
-const dummyArticles = [
-  { id: 1, title: "기사 제목" },
-  { id: 2, title: "기사 제목" },
-  { id: 3, title: "기사 제목" },
-  { id: 4, title: "기사 제목" },
-  { id: 5, title: "기사 제목" },
-  { id: 6, title: "기사 제목" },
-  { id: 7, title: "기사 제목" },
-  { id: 8, title: "기사 제목" },
-  { id: 9, title: "기사 제목" }
-];
-
 function TrendArticleList() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3002/api/infoPosts?category=info_trend")
+      .then((res) => {
+        setArticles(res.data);
+      })
+      .catch((err) => {
+        console.error("데이터 불러오기 실패:", err);
+      });
+  }, []);
 
   const handleCardClick = (id) => {
-     navigate(`/infoboard/trend/${id}`);
+    navigate(`/infoboard/trend/${id}`);
   };
+
+  const CardImage = ({ src, alt }) => {
+  const [imgError, setImgError] = useState(false);
+
+  return imgError || !src ? (
+    <div
+      style={{
+        height: "100px",
+        width: "100%",
+        backgroundColor: "#d9d9d9",
+        borderRadius: "16px",
+        marginBottom: "16px",
+      }}
+    />
+    ) : (
+      <img
+        src={src}
+        alt=""
+        onError={() => setImgError(true)}
+        style={{
+          height: "100px",
+          width: "100%",
+          objectFit: "cover",
+          borderRadius: "16px",
+          marginBottom: "16px",
+          display: "block",
+        }}
+      />
+    );
+  };
+
 
   return (
     <Grid>
-      {dummyArticles.map(article => (
-        <Card key={article.id} onClick={() => handleCardClick(article.id)}>
-          <Thumbnail />
-          <Title>{article.title}</Title>
-        </Card>
+      {articles.map((article) => (
+      <Card key={article.info_post_id} onClick={() => handleCardClick(article.info_post_id)}>
+        <CardImage src={article.thumbnail} />
+        <Title>{article.title}</Title>
+      </Card>
       ))}
     </Grid>
   );

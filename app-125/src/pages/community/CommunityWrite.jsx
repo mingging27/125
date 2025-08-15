@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios"; 
 import Header from "../../components/Header";
 
 const PageWrapper = styled.div`
@@ -32,7 +34,7 @@ const EditorWrapper = styled.div`
 
 const EditorToolbar = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content:center;
   gap: 12px;
   background-color: #f7f7f7;
   padding: 8px 16px;
@@ -97,14 +99,30 @@ const SubmitButton = styled.button`
 function CommunityWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) {
       alert("제목과 내용을 모두 입력해주세요.");
       return;
     }
 
-    alert("작성 완료!");
+    try {
+      const response = await axios.post("http://127.0.0.1:3002/api/community/create", {
+        title,
+        content,
+        user_id: 1 // ⚠️ 유저 연결 전이므로 임시 하드코딩
+      });
+
+      console.log("게시글 등록 성공:", response.data);
+      alert("작성 완료!");
+
+      navigate("/community");
+
+    } catch (error) {
+      console.error("게시글 등록 실패:", error);
+      alert("게시글 등록에 실패했습니다.");
+    }
   };
 
   return (

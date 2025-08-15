@@ -1,8 +1,8 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../../components/Header";
-import seniorJobs from "../../data/seniorJobs";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const PageWrapper = styled.div`
   padding-top: 140px;
@@ -52,7 +52,6 @@ const Tr = styled.tr`
   }
 `;
 
-
 const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: none;
@@ -62,6 +61,19 @@ const StyledLink = styled(Link)`
 `;
 
 function SeniorJobRecommend() {
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:3002/api/infoPosts?category=info_recommend")
+      .then((res) => {
+        setJobs(res.data);
+      })
+      .catch((err) => {
+        console.error("데이터 불러오기 실패:", err);
+      });
+  }, []);
+
   return (
     <>
       <Header />
@@ -77,21 +89,21 @@ function SeniorJobRecommend() {
               </tr>
             </Thead>
             <tbody>
-              {seniorJobs.map((item, index) => (
-                <Tr key={item.id}>
+              {jobs.map((item, index) => (
+                <Tr key={item.info_post_id}>
                   <Td>
-                    <StyledLink to={`/infoboard/senior/${item.id}`}>
+                    <StyledLink to={`/infoboard/recommend/${item.info_post_id}`}>
                       {index + 1}
                     </StyledLink>
                   </Td>
                   <Td>
-                    <StyledLink to={`/infoboard/senior/${item.id}`}>
+                    <StyledLink to={`/infoboard/recommend/${item.info_post_id}`}>
                       {item.title}
                     </StyledLink>
                   </Td>
                   <Td>
-                    <StyledLink to={`/infoboard/senior/${item.id}`}>
-                      {item.date}
+                    <StyledLink to={`/infoboard/recommend/${item.info_post_id}`}>
+                      {new Date(item.published_at).toLocaleDateString()}
                     </StyledLink>
                   </Td>
                 </Tr>
