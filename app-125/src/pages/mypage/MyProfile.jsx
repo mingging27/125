@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Switch from "react-switch";
 import styled from "styled-components";
 import avatar from "../../img/avatar.png";
 import SuccessModal from "../../modal/SuccessModal";
@@ -21,10 +20,10 @@ const SectionTitle = styled.h2`
 const ProfileCard = styled.div`
   display: flex;
   align-items: center;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border, #ddd);          
   padding: 40px;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: var(--card-bg, #fff);         
   margin-bottom: 20px;
 `;
 
@@ -43,32 +42,14 @@ const Avatar = styled.img`
   background-color: #f2f2f2;
 `;
 
-// const ChangeButton = styled.button`
-//   margin-top: 20px;
-//   padding: 6px 16px;
-//   border: 2px solid #3e63dd;
-//   border-radius: 2px;
-//   background: white;
-//   color: #3e63dd;
-//   font-weight: 500;
-//   cursor: pointer;
-// `;
-
 const ProfileInfo = styled.div`
   font-size: 16px;
   line-height: 2;
 `;
 
-// const ProfileMeta = styled.div`
-//   font-size: 14px;
-//   color: #666;
-//   margin-left: 160px;
-//   margin-bottom: 30px;
-// `;
-
 const Label = styled.div`
   font-size: 13px;
-  color: #777;
+  color: var(--muted, #777);                      
   margin-bottom: 8px;
 `;
 
@@ -76,14 +57,14 @@ const Input = styled.input`
   width: 100%;
   padding: 14px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background-color: #fdfdfd;
+  border: 1px solid #e5e7eb;                     
+  background-color: var(--input-bg, #fdfdfd);     
   font-size: 14px;
-  color: #333;
+  color: var(--text, #333);                        
   outline: none;
 
   &:focus {
-    border-color: #3e63dd;
+    border-color: var(--accent, #3e63dd);         
   }
 `;
 
@@ -104,7 +85,7 @@ const ButtonSection = styled.div`
 `;
 
 const EditButton = styled.button`
-  background-color: #000;
+  background-color: var(--btn-bg, #000);          
   color: #fff;
   padding: 10px 24px;
   font-size: 15px;
@@ -113,7 +94,7 @@ const EditButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #333;
+    background-color: var(--btn-bg-hover, #333);  
   }
 `;
 
@@ -121,7 +102,6 @@ function MyProfile() {
   const [user, setUser] = useState(null);
   const [bio, setBio] = useState("");
   const [address, setAddress] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const fetchUserProfile = async () => {
@@ -131,7 +111,6 @@ function MyProfile() {
       setUser(data);
       setBio(data.bio || "");
       setAddress(data.address || "");
-      setDarkMode(Boolean(data.darkmode));
     } catch (error) {
       console.error("유저 정보 불러오기 실패:", error);
     }
@@ -143,25 +122,11 @@ function MyProfile() {
 
   const handleEditClick = async () => {
     try {
-      await axiosInstance.put("/api/user/mypage/update", {
-        bio,
-        address,
-      });
+      await axiosInstance.put("/api/user/mypage/update", { bio, address });
       await fetchUserProfile();
       setShowModal(true);
     } catch (error) {
       console.error("프로필 수정 실패:", error);
-    }
-  };
-
-  const handleToggleDarkMode = async (checked) => {
-    setDarkMode(checked);
-    try {
-      await axiosInstance.put("/api/user/mypage/update", {
-        darkmode: checked ? 1 : 0,
-      });
-    } catch (error) {
-      console.error("다크모드 업데이트 실패:", error);
     }
   };
 
@@ -174,28 +139,9 @@ function MyProfile() {
           <ProfileCard>
             <AvatarWrapper>
               <Avatar src={user.profileImage || avatar} alt="프로필 이미지" />
-              {/* 사진 변경 로직 없으므로 일단 주석 처리 */}
-              {/* <ChangeButton>사진 변경</ChangeButton> */}
             </AvatarWrapper>
 
             <div style={{ flex: 1 }}>
-              {/* 다크모드 토글 - sql에 있어서 일단 버튼 추가, 기능은 아직 */}
-              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <span style={{ marginRight: "8px", fontSize: "14px", color: "#666" }}>다크모드</span>
-                  <Switch
-                    onChange={handleToggleDarkMode}
-                    checked={darkMode}
-                    onColor="#3e63dd"
-                    offColor="#ccc"
-                    uncheckedIcon={false}
-                    checkedIcon={false}
-                    height={20}
-                    width={40}
-                  />
-                </div>
-              </div>
-
               {/* 프로필 정보 */}
               <ProfileInfo>
                 <div>이름: {user.username}</div>
@@ -228,7 +174,7 @@ function MyProfile() {
             />
           </div>
 
-          <div style={{ marginTop: "24px" }}>
+          <div style={{ marginTop: 24 }}>
             <Label>주소</Label>
             <Input
               type="text"
@@ -253,7 +199,6 @@ function MyProfile() {
       )}
     </ProfileContainer>
   );
-
 }
 
 export default MyProfile;

@@ -6,7 +6,6 @@ import {
   HiBookmark,
   HiLockClosed
 } from "react-icons/hi";
-import { FaRegSmile } from "react-icons/fa";
 
 const Sidebar = styled.div`
   background: white;
@@ -51,7 +50,6 @@ function MyPageSidebar() {
     <Sidebar>
       <MenuItem to="/mypage/profile"><HiUser />프로필</MenuItem>
       <MenuItem to="/mypage/applies"><HiDocumentText />지원 현황</MenuItem>
-      <MenuItem to="/mypage/interests"><FaRegSmile />관심 있는 공고</MenuItem>
       <MenuItem to="/mypage/scraps"><HiBookmark />스크랩한 게시물</MenuItem>
       <MenuItem to="/mypage/account"><HiLockClosed />계정 관리</MenuItem>
     </Sidebar>

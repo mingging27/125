@@ -80,6 +80,7 @@ const InnerWrapper = styled.div`
 const Title = styled.h2`
   font-size: 24px;
   font-weight: 700;
+  margin-top: 50px;
   margin-bottom: 10px;
 `;
 

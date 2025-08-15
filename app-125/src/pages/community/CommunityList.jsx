@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Header from "../../components/Header";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart } from "react-icons/ai";
 import axios from "axios";
 
 const PageWrapper = styled.div`
@@ -132,7 +132,7 @@ function CommunityList() {
           : `http://127.0.0.1:3002/api/community`;
         const res = await axios.get(url);
         setPosts(res.data);
-      } catch (error) {
+      } catch (error) { 
         console.error("게시글 불러오기 실패:", error);
       }
     };
@@ -179,10 +179,6 @@ function CommunityList() {
               <PostPreview>{post.content.slice(0, 50)}...</PostPreview>
               <PostMeta>
                 <MetaLeft>
-                  <MetaItem>
-                    <AiOutlineEye />
-                    <span>0</span>
-                  </MetaItem>
                   <MetaItem>
                     <AiOutlineHeart />
                     <span>{post.like_count}</span>

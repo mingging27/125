@@ -24,3 +24,4 @@ function DeleteConfirmModal({ title, message, onClose, onConfirm }) {
 }
 
 export default DeleteConfirmModal;
+

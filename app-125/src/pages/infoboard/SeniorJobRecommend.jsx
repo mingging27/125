@@ -92,17 +92,17 @@ function SeniorJobRecommend() {
               {jobs.map((item, index) => (
                 <Tr key={item.info_post_id}>
                   <Td>
-                    <StyledLink to={`/infoboard/senior/${item.info_post_id}`}>
+                    <StyledLink to={`/infoboard/recommend/${item.info_post_id}`}>
                       {index + 1}
                     </StyledLink>
                   </Td>
                   <Td>
-                    <StyledLink to={`/infoboard/senior/${item.info_post_id}`}>
+                    <StyledLink to={`/infoboard/recommend/${item.info_post_id}`}>
                       {item.title}
                     </StyledLink>
                   </Td>
                   <Td>
-                    <StyledLink to={`/infoboard/senior/${item.info_post_id}`}>
+                    <StyledLink to={`/infoboard/recommend/${item.info_post_id}`}>
                       {new Date(item.published_at).toLocaleDateString()}
                     </StyledLink>
                   </Td>

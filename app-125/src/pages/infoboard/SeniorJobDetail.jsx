@@ -15,6 +15,7 @@ const PageWrapper = styled.div`
 const Title = styled.h2`
   font-size: 24px;
   font-weight: 700;
+  margin-top: 50px;
   margin-bottom: 30px;
 `;
 
@@ -57,7 +58,7 @@ const Tag = styled.div`
 const JobDesc = styled.div`
   font-size: 16px;
   min-height: 180px;
-  padding: 20px;
+  padding: 50px;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   background-color: white;

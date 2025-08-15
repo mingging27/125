@@ -1,6 +1,6 @@
 // src/components/Header.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import searchicon from "../img/Search.png";
 import logo from "../img/logo.png";
@@ -14,7 +14,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 114px;
+  height: auto;
   z-index: 999;
 `;
 
@@ -39,7 +39,7 @@ const SearchBox = styled.form`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #3478F6;
+  border: 1px solid #3478f6;
   padding-right: 10px;
 `;
 
@@ -50,14 +50,8 @@ const SearchInput = styled.input`
   padding-left: 21px;
   font-size: 15px;
   font-weight: bold;
-
-  &:focus {
-    outline: none;
-  }
-
-  &::placeholder {
-    color: #BDBDBD;
-  }
+  &:focus { outline: none; }
+  &::placeholder { color: #bdbdbd; }
 `;
 
 const SearchBtn = styled.button`
@@ -83,11 +77,12 @@ const Navigation = styled.ul`
   padding: 0;
   margin: 0;
   background-color: white;
-  border-top: 1px solid #3478F6;
-  border-bottom: 1px solid #3478F6;
+  border-top: 1px solid #3478f6;
+  border-bottom: 1px solid #3478f6;
   font-size: 20px;
   font-weight: bold;
-  color: #2D66D0;
+  color: #2d66d0;
+  position: relative; /* 드롭다운/백드롭 기준 */
 `;
 
 const Category = styled.li`
@@ -97,61 +92,136 @@ const Category = styled.li`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  position: relative;
+  color: ${({ $active }) => ($active ? "white" : "#2d66d0")};
+  background-color: ${({ $active }) => ($active ? "#2d66d0" : "transparent")};
 
   &:hover {
     color: white;
-    background-color: #2D66D0;
+    background-color: #2d66d0;
   }
+`;
+
+const Backdrop = styled.div`
+  position: absolute;
+  top: 50px;   /* 카테고리 높이 */
+  left: 0;
+  width: 100%;
+  background: #2d66d0;
+  border-bottom: 1px solid #2d66d0;
+  z-index: 5;  /* 항목(SubMenu)보다 낮고, 네비 아래 컨텐츠보다 높게 */
+  pointer-events: none;
+
+  height: ${({ open }) => (open ? "180px" : "0")};
+  opacity: ${({ open }) => (open ? 1 : 0)};
+  transition: height 0.22s ease, opacity 0.18s ease;
+`;
+
+const SubMenu = styled.div`
+  position: absolute;
+  top: 50px;
+  left: ${({ left }) => `${left}px`};
+  width: ${({ width }) => `${width}px`};
+  color: #fff;
+  background: transparent; /* 배경은 Backdrop이 담당 */
+  z-index: 6;              /* Backdrop 위 */
+  overflow: hidden;
+
+  max-height: ${({ open }) => (open ? "220px" : "0")};
+  opacity: ${({ open }) => (open ? 1 : 0)};
+  pointer-events: ${({ open }) => (open ? "auto" : "none")};
+  transition: max-height 0.22s ease, opacity 0.18s ease;
+`;
+
+const SubList = styled.ul`
+  list-style: none;
+  padding: 10px 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column; /* 세로 배치 */
+`;
+
+const SubItem = styled.li`
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  border-radius: 8px;
+
+  &:hover { background: rgba(255, 255, 255, 0.14); }
 `;
 
 function Header() {
   const navigate = useNavigate();
 
-  // 토큰 존재 여부로 로그인 상태 판단
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // 검색어 관리 상태 
   const [searchKeyword, setSearchKeyword] = useState("");
 
+  const [open, setOpen] = useState(false);
+  const [activeKey, setActiveKey] = useState(null); // 'infoboard'
+  const [submenuLeft, setSubmenuLeft] = useState(0);
+  const [submenuWidth, setSubmenuWidth] = useState(190);
+
+  const navRef = useRef(null);
+  const infoRef = useRef(null);
+  const closeTimerRef = useRef(null);
+
   useEffect(() => {
-    const token = localStorage.getItem("token"); // 저장한 토큰 키 이름 확인
-    setIsLoggedIn(!!token);
+    setIsLoggedIn(!!localStorage.getItem("token"));
   }, []);
 
   const handleLogout = async () => {
     try {
-      // 서버 로그아웃 API 호출 (필요시)
-      const response = await fetch("http://127.0.0.1:3002/api/auth/logout", {
+      const res = await fetch("http://127.0.0.1:3002/api/auth/logout", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      const data = await response.json();
-
-      if (response.ok) {
+      const data = await res.json();
+      if (res.ok) {
         alert(data.message || "로그아웃 되었습니다.");
-        localStorage.removeItem("token"); // 토큰 삭제
+        localStorage.removeItem("token");
         setIsLoggedIn(false);
-        navigate("/"); // 로그아웃 후 메인 페이지로 이동
+        navigate("/");
       } else {
         alert(data.message || "로그아웃 실패");
       }
-    } catch (error) {
+    } catch (e) {
       alert("로그아웃 중 오류가 발생했습니다.");
-      console.error(error);
+      console.error(e);
     }
   };
 
-  // 검색 제출 핸들러 추가
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchKeyword.trim() === "") return;
+    if (!searchKeyword.trim()) return;
     navigate(`/community?search=${encodeURIComponent(searchKeyword.trim())}`);
     setSearchKeyword("");
   };
 
+  const openInfo = () => {
+    if (!navRef.current || !infoRef.current) return;
+    const navRect = navRef.current.getBoundingClientRect();
+    const tabRect = infoRef.current.getBoundingClientRect();
+    setSubmenuLeft(tabRect.left - navRect.left);
+    setSubmenuWidth(tabRect.width);
+    setActiveKey("infoboard");
+    setOpen(true);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+  };
+
+  const scheduleClose = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => {
+      setOpen(false);
+      setActiveKey(null);
+    }, 140);
+  };
+
+  const isInfoOpen = open && activeKey === "infoboard";
+
   return (
-    <Container>
+    <Container onMouseLeave={scheduleClose}>
       <Top>
         <AppLogo src={logo} onClick={() => navigate("/")} />
         <SearchBox onSubmit={handleSearch}>
@@ -167,11 +237,20 @@ function Header() {
         </SearchBox>
       </Top>
 
-      <Navigation>
+      <Navigation ref={navRef}>
         <Category onClick={() => navigate("/recruit")}>구인 / 구직</Category>
         <Category onClick={() => navigate("/resume")}>이력서</Category>
         <Category onClick={() => navigate("/community")}>커뮤니티</Category>
-        <Category onClick={() => navigate("/infoboard/trend")}>정보게시판</Category>
+
+        <Category
+          ref={infoRef}
+          $active={isInfoOpen}
+          onMouseEnter={openInfo}
+          onClick={() => navigate("/infoboard/trend")}
+        >
+          정보게시판
+        </Category>
+
         <Category onClick={() => navigate("/mypage")}>마이페이지</Category>
 
         {isLoggedIn ? (
@@ -183,6 +262,24 @@ function Header() {
             로그인
           </Category>
         )}
+
+        {/* 가로 전체 파란 백드롭 */}
+        <Backdrop open={isInfoOpen} />
+
+        {/* 탭 폭만큼의 세로 드롭다운 항목 */}
+        <SubMenu
+          open={isInfoOpen}
+          left={submenuLeft}
+          width={submenuWidth}
+          onMouseEnter={openInfo}
+          onMouseLeave={scheduleClose}
+        >
+          <SubList>
+            <SubItem onClick={() => navigate("/infoboard/trend")}>취업 트렌드</SubItem>
+            <SubItem onClick={() => navigate("/infoboard/edu")}>디지털 교육</SubItem>
+            <SubItem onClick={() => navigate("/infoboard/recommend")}>중장년 직무추천</SubItem>
+          </SubList>
+        </SubMenu>
       </Navigation>
     </Container>
   );
