@@ -21,10 +21,11 @@ const ListTitle = styled.h2`
   font-weight: bold;
   font-size: 24px;
   margin-left: 10px;
+  margin-bottom: 30px;
 `;
 
 const ListWrap = styled.div` 
-  width: 1280px;
+  width: 1100px;
   display: column;
   justify-content: center;
 `;
@@ -34,11 +35,13 @@ const Content = styled.div`
 `;
 
 const SubTitle = styled.div`
-  width: 1280px;
-  height: 64px;
+  width: 1100px;
+  height: 50px;
   background-color: #f9fbfc;
   border: 1px solid #d0d0ce;
   border-bottom: none;
+  padding-left: 7px;
+  margin: 0;
 
   display: flex;
   justify-content: space-around;
@@ -90,6 +93,10 @@ const theme = createTheme({
 function List({ type, data }) {
   const [stockList, setStockList] = useState(data);
 
+  useEffect(() => {
+  setStockList(data);
+}, [data]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const lastPage = Math.ceil(stockList.length / itemsPerPage);
@@ -118,12 +125,14 @@ function List({ type, data }) {
         
         {currentList.map((item, idx) => (
   <ListContent
-    key={item.id}
-    type={type === "이력서" ? "resume" : "default"}
-    index={indexOfFirstItem + idx + 1}
-    title={item.title}
-    date={item.date}
-  />
+  key={item.id}
+  type={type === "이력서" ? "resume" : "default"}
+  index={indexOfFirstItem + idx + 1} // 이건 화면 표시용
+  id={item.id} // 삭제 API용 id 전달
+  title={item.title}
+  date={item.date}
+/>
+
 ))}
       </Content>
       <PaginationWrap>

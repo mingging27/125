@@ -6,7 +6,7 @@ import CustomProgressBar from "../../components/resume/CustomProgressBar";
 const Content = styled.div`
   height: 1600px;
   padding-top: 160px;
-  background-color: #FDF8F4;
+  background-color: ##fdfcfa;
 
   display: flex;
   justify-content: center;
