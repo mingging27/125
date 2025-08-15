@@ -26,8 +26,8 @@ const Banner = styled.section`
 `;
 
 const BannerContent = styled.div`
-  width: 1178px;           
-  text-align: left;        
+  width: 1178px;
+  text-align: left;
   color: black;
 `;
 
@@ -35,7 +35,6 @@ const BannerTitle = styled.h2`
   font-size: 32px;
   font-weight: 700;
   margin: 0;
-
 `;
 
 const BannerSubtitle = styled.p`
@@ -70,7 +69,7 @@ const BannerButtonSecondary = styled.button`
   background: linear-gradient(to right, #2D66D0, #FEAD5C);
   color: white;
   border: none;
-  border-radius: 30px; 
+  border-radius: 30px;
   font-size: 16px;
   padding: 12px 24px;
   cursor: pointer;
@@ -84,7 +83,7 @@ const BannerButtonSecondary = styled.button`
 
 const Section = styled.section`
   max-width: 1178px;
-  margin: 80px auto 0 auto;
+  margin: 80px auto 200px auto;
 `;
 
 const SectionTitle = styled.h3`
@@ -101,7 +100,7 @@ const CardContainer = styled.div`
 `;
 
 const Card = styled.div`
-  width: 22%; 
+  width: 22%;
   min-width: 200px;
   max-width: 240px;
   height: 220px;
@@ -133,120 +132,19 @@ const CardText = styled.p`
   text-align: center;
 `;
 
-const RealtimeSection = styled.section`
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  max-width: 1178px;
-  margin: 80px auto;
-`;
-
-const RealtimeBlock = styled.div`
-  flex: 1;
-`;
-
-const BlockTitle = styled.h3`
-  font-size: 20px;
-  font-weight: 900;
-  margin-bottom: 24px;
-`;
-
-const RecruitItem = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-  font-size: 15px;
-`;
-
-const Company = styled.div`
-  width: 160px;          
-  font-weight: bold;
-`;
-
-const Role = styled.div`
-  flex: 1;                
-`;
-
-const Deadline = styled.div`
-  width: 100px;
-  text-align: right;
-  color: #555;
-  font-size: 14px;
-`;
-
-const CommunityItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  font-size: 15px;
-`;
-
-const PostTitle = styled.span`
-  flex: 1;
-  font-weight: 500;
-`;
-
-const PostMeta = styled.div`
-  display: flex;
-  gap: 16px;
-  color: #888;
-  font-size: 13px;
-`;
-
-
 function MainPage() {
-
   const navigate = useNavigate();
-
-  // 더미 데이터 
-  const recruitList = [
-    {
-      company: "한국전력공사",
-      role: "전산직",
-      deadline: "~7/20 마감",
-    },
-    {
-      company: "한국관광공사",
-      role: "기획직",
-      deadline: "~7/25 마감",
-    },
-    {
-      company: "삼성전자",
-      role: "SW개발",
-      deadline: "~7/30 마감",
-    },
-  ];
-
-  const postList = [
-    {
-      title: "자소서 피드백 받을 수 있을까요?",
-      likes: 25,
-      time: "2시간 전",
-    },
-    {
-      title: "면접 때 이런 질문 받았어요",
-      likes: 17,
-      time: "5시간 전",
-    },
-    {
-      title: "이력서에서 자주 실수하는 포인트!",
-      likes: 42,
-      time: "어제",
-    },
-  ];
-
   return (
     <>
       <Header />
       <PageWrapper>
-
         <Banner>
           <BannerContent>
             <BannerTitle>125 일이요! :</BannerTitle>
             <BannerSubtitle>한 번 더, 두 번째 기회, 다섯 가지의 가능성!</BannerSubtitle>
             <ButtonGroup>
-              <BannerButtonPrimary>이력서 리터칭 시작하기</BannerButtonPrimary>
-              <BannerButtonSecondary>채용 공고 바로가기</BannerButtonSecondary>
+              <BannerButtonPrimary onClick={() => navigate('/resume')}>이력서 리터칭 시작하기</BannerButtonPrimary>
+              <BannerButtonSecondary onClick={() => navigate('/recruit')}>채용 공고 바로가기</BannerButtonSecondary>
             </ButtonGroup>
           </BannerContent>
         </Banner>
@@ -258,50 +156,21 @@ function MainPage() {
               <CardImage src={JobResearchImg} alt="구인/구직 게시판" />
               <CardText>구인/구직 게시판</CardText>
             </Card>
-            <Card>
+            <Card onClick={() => navigate('/resume')}>
               <CardImage src={AIRetouchingImg} alt="AI 이력서 리터칭" />
               <CardText>AI 이력서 리터칭</CardText>
             </Card>
-            <Card>
+            <Card onClick={() => navigate('/community')}>
               <CardImage src={CommunityImg} alt="커뮤니티" />
               <CardText>커뮤니티</CardText>
             </Card>
-            <Card>
+            <Card onClick={() => navigate('/infoboard/trend')}>
               <CardImage src={InfoBroadImg} alt="정보게시판" />
               <CardText>정보게시판</CardText>
             </Card>
-
           </CardContainer>
         </Section>
 
-        <RealtimeSection>
-          {/* 실시간 채용 */}
-          <RealtimeBlock>
-            <BlockTitle>실시간 채용</BlockTitle>
-            {recruitList.map((item, idx) => (
-              <RecruitItem key={idx}>
-                <Company>{item.company}</Company>
-                <Role>[{item.role}] 채용공고</Role>
-                <Deadline>{item.deadline}</Deadline>
-              </RecruitItem>
-            ))}
-          </RealtimeBlock>
-
-          {/* 커뮤니티 인기글 */}
-          <RealtimeBlock>
-            <BlockTitle>커뮤니티 실시간 인기글</BlockTitle>
-            {postList.map((post, idx) => (
-              <CommunityItem key={idx}>
-                <PostTitle>{post.title}</PostTitle>
-                <PostMeta>
-                  <div>❤️ {post.likes}</div>
-                  <div>{post.time}</div>
-                </PostMeta>
-              </CommunityItem>
-            ))}
-          </RealtimeBlock>
-        </RealtimeSection>
-        
         <Footer />
       </PageWrapper>
     </>
