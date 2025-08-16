@@ -1,16 +1,30 @@
 // controllers/resume.controller.js
 const { Resume, User, UserCertificate, UserLanguageScore, UserPreferredDay } = require('../models');
 
+/*// 생년월일 → 나이 계산 함수
+function calculateAge(birthdate) {
+  if (!birthdate) return null;
+  const birth = new Date(birthdate);
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+}*/
+
 // [API: POST /resume/create] 이력서 생성 + 회원정보 업데이트
 exports.createResume = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    // 0) memberInfo가 있으면 회원정보 업데이트
+    // 0) memberInfo 있으면 회원정보 업데이트 (age만 반영)
     if (req.body.memberInfo) {
       const info = req.body.memberInfo;
       const updateData = {};
-      ["username", "phone_number", "gender", "birthdate", "address"].forEach(field => {
+
+      ["username", "age", "gender", "address", "phone_number", "email"].forEach(field => {
         if (info[field] !== undefined) updateData[field] = info[field];
       });
 
@@ -24,7 +38,7 @@ exports.createResume = async (req, res) => {
       return res.status(400).json({ message: '이력서 제목은 필수 입력입니다.' });
     }
 
-    // 2) Resume 단독 생성
+    // 2) Resume 생성
     const resume = await Resume.create({
       ...req.body,
       resume_title: req.body.resume_title,
@@ -68,9 +82,9 @@ exports.createResume = async (req, res) => {
       ],
     });
 
-    // 회원정보 조회 (user_id 포함)
+    // 회원정보 조회 (birthdate 제외 → age만 반환)
     const user = await User.findByPk(userId, {
-      attributes: ['user_id', 'username', 'phone_number', 'gender', 'birthdate', 'address']
+      attributes: ["user_id", "username", "age", "gender", "address", "phone_number", "email"]
     });
 
     res.status(201).json({ message: '이력서 등록 성공', resume: fullResume, memberInfo: user });
@@ -116,9 +130,9 @@ exports.getResumeById = async (req, res) => {
 
     if (!resume) return res.status(404).json({ message: '이력서 없음' });
 
-    // 회원정보도 같이 조회
+    // 회원정보도 같이 조회 (birthdate 제외)
     const user = await User.findByPk(req.user.userId, {
-      attributes: ['user_id', 'username', 'phone_number', 'gender', 'birthdate', 'address']
+      attributes: ["user_id", "username", "age", "gender", "address", "phone_number", "email"]
     });
 
     res.json({ resume, memberInfo: user });
@@ -138,11 +152,11 @@ exports.updateResume = async (req, res) => {
 
     if (!resume) return res.status(404).json({ message: '이력서 없음' });
 
-    // 0) memberInfo가 있으면 회원정보 업데이트
+    // 0) memberInfo 있으면 회원정보 업데이트 (age만 반영)
     if (req.body.memberInfo) {
       const info = req.body.memberInfo;
       const updateData = {};
-      ["username", "phone_number", "gender", "birthdate", "address"].forEach(field => {
+      ["username", "age", "gender", "address", "phone_number", "email"].forEach(field => {
         if (info[field] !== undefined) updateData[field] = info[field];
       });
 
@@ -157,9 +171,9 @@ exports.updateResume = async (req, res) => {
       resume_title: req.body.resume_title || resume.resume_title
     });
 
-    // 업데이트 후 회원정보 조회
+    // 업데이트 후 회원정보 조회 (birthdate 제외)
     const user = await User.findByPk(userId, {
-      attributes: ['user_id', 'username', 'phone_number', 'gender', 'birthdate', 'address']
+      attributes: ["user_id", "username", "age", "gender", "address", "phone_number", "email"]
     });
 
     res.json({ message: '이력서 및 회원정보 업데이트 완료', resume, memberInfo: user });
