@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Question from "../../components/interview/Question";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 const Content = styled.div`
@@ -39,7 +40,7 @@ const ListContentBottom = styled(ListContentMiddle)`
 const Subtitle = styled.h3`
   font-size: 24px;
   margin: 0;
-  margin-bottom: 34px;
+  margin-bottom: 20px;
 `;
 
 const Wrap = styled.div`
@@ -76,7 +77,7 @@ const Text = styled.p`
 `;
 
 const Text2 = styled(Text)`
-  /* 회원 정보 앞에 나오는 내용들 너비 조정 -> 뒤 내용 위치 맞춤 */
+  /* 회원 정보 왼쪽 요소들 너비 조정 -> 오른쪽 요소 내용 위치 맞춤 */
   width: 222px;
 `;
 
@@ -86,8 +87,8 @@ const BoldText = styled(Text)`
 `;
 
 const AITitle = styled.h2`
-  font-size: 50px;
-  margin: 75px 0 24px 0;
+  font-size: 38px;
+  margin: 75px 0 14px 0;
 
   background: linear-gradient(to right, #2d66d0, #5ec27d);
   -webkit-background-clip: text;
@@ -98,16 +99,22 @@ const AITitle = styled.h2`
   text-fill-color: transparent;
 `;
 
+const AISubtitle = styled(Title)`
+  margin-top: 80px;
+  margin-bottom: 30px;
+  font-size: 23px;
+`;
+
 const AIDescription = styled.p`
   text-align: center;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 600;
   margin: 0;
 `;
 
 const AIDescription2 = styled(AIDescription)`
-  margin-top: 122px;
-  margin-bottom: 64px;
+  margin-top: 100px;
+  margin-bottom: 100px;
 `;
 
 const BoxWrap = styled.div`
@@ -116,45 +123,28 @@ const BoxWrap = styled.div`
 
 const Weakness = styled.div`
   width: 622px;
-  height: 547px;
+  height: 250px;
   position: relative;
   border-radius: 50px;
   background: white;
 
   position: relative;
-  margin-top: 43px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    z-index: -1;
-    background: linear-gradient(to top right, #2d66d0, #5ec27d);
-    border-radius: 55px;
-  }
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 
 const Strength = styled(Weakness)`
   margin-left: 54px;
-
-  &::before {
-    background: linear-gradient(to bottom right, #5ec27d, #fead5c);
-  }
 `;
 
 const KeywordBox = styled(Weakness)`
   width: 1298px;
   min-height: 400px;
-  &::before {
-    background: linear-gradient(to top right, #2d66d0, #fead5c);
-  }
+  margin-top: 30px;
 `;
 
 const KeywordWrap = styled.div`
@@ -173,11 +163,7 @@ const Keyword = styled.div`
 
 const Activity = styled(Weakness)`
   width: 1298px;
-  min-height: 575px;
-
-  &::before {
-    background: linear-gradient(to bottom, #2d66d0, #5ec27d);
-  }
+  min-height: 400px;
 `;
 
 const BoxTitleDiv = styled.div`
@@ -248,9 +234,9 @@ const BoxRecommend = styled.p`
 `;
 
 const ActivityBlock = styled.div`
-  height: 360px;
+  height: 200px;
   margin-top: 180px;
-  width: 370px;
+  width: 400px;
   padding: 0 30px 0 30px;
   border-right: 1px solid #a8a8a8;
 
@@ -291,8 +277,7 @@ const BtnDiv2 = styled(BtnDiv)`
 
 //QnA
 const QList = styled.div`
-  height: 1600px;
-  position: relative;
+  margin-bottom: 80px;
 `;
 
 function Detail() {
@@ -301,6 +286,46 @@ function Detail() {
   const [feedbackData, setFeedbackData] = useState(null);
   const [error, setError] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+
+  const navigate = useNavigate();
+
+  // 삭제 기능
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`http://127.0.0.1:3002/api/resumes/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("삭제에 실패했습니다.");
+      }
+
+      alert("삭제가 완료되었습니다.");
+      navigate(`/resumes`); // 목록 라우트로 이동
+    } catch (error) {
+      console.error(error);
+      alert("삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 수정
+  const goToEdit = () => {
+    navigate(`/resumes/edit/${id}`); // 수정 라우트로 이동
+  };
+
+  // 목록 이동
+  const goToList = () => {
+    navigate(`/resumes`); // 목록 라우트로 이동
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -375,7 +400,7 @@ function Detail() {
   const MIN_FONT = 16;
 
   // 박스 크기 (KeywordWrap에 맞춤)
-  const BOX_WIDTH = 1200;
+  const BOX_WIDTH = 800;
   const BOX_HEIGHT = 200;
 
   function getFontSize(importance) {
@@ -501,12 +526,12 @@ function Detail() {
 
         <AITitle>AI의 추천</AITitle>
         <AIDescription>
-          ㅇㅇㅇ님의 희망 직무를 바탕으로 이력서의 개선 포인트를 AI가 분석했어요.
+          {userInfo?.name || "사용자"}님의 희망 직무를 바탕으로 이력서의 개선 포인트를 AI가 분석했어요.
           <br />더 나은 이력서 작성을 위한 힌트를 얻어보세요!
         </AIDescription>
 
         <QList>
-          <Title>예상 질문</Title>
+          <AISubtitle>예상 질문</AISubtitle>
           {feedbackData?.expected_questions?.map((question, idx) => (
             <Question key={idx} question={question} answer={feedbackData.model_answers?.[idx] || ""} />
           ))}
@@ -516,11 +541,7 @@ function Detail() {
           <Weakness>
             <BoxTitleDiv>
               <BoxTitle>약점</BoxTitle>
-              <BoxDescription>
-                이력서에서 일부 오류가 발견되었어요.
-                <br />
-                이런 작은 실수도 신뢰도에 영향을 줄 수 있으니, 꼭 수정해보세요!
-              </BoxDescription>
+              <BoxDescription>이 부분을 조금 더 보완하면 좋을 것 같아요.</BoxDescription>
             </BoxTitleDiv>
             <Line />
             <PositionWrap>
@@ -535,7 +556,7 @@ function Detail() {
           <Strength>
             <BoxTitleDiv>
               <BoxTitle>강점</BoxTitle>
-              <BoxDescription>이런 부분들을 보완하면 더 돋보이는 이력서를 만들 수 있어요!</BoxDescription>
+              <BoxDescription>이런 부분을 어필하면 다른 지원자보다 돋보일 수 있어요.</BoxDescription>
             </BoxTitleDiv>
             <Line />
             <PositionWrap>
@@ -571,7 +592,7 @@ function Detail() {
         <AIDescription2>
           경력 단절 기간이 있는 지원자에게는 그 공백을 “성장의 시간”으로 보여주는 게 핵심이에요.
           <br />
-          ㅇㅇㅇ님의 경력 단절 보완을 위해 다음과 같은 활동을 추천해요!{" "}
+          {userInfo?.name || "사용자"}님의 경력 단절 보완을 위해 다음과 같은 활동을 추천해요!{" "}
         </AIDescription2>
         {feedbackData && (
           <Activity>
@@ -601,10 +622,16 @@ function Detail() {
         )}
         <BtnDiv2>
           <BtnDiv>
-            <Btn type="button">삭제</Btn>
-            <Btn type="button">수정</Btn>
+            <Btn type="button" onClick={handleDelete}>
+              삭제
+            </Btn>
+            <Btn type="button" onClick={goToEdit}>
+              수정
+            </Btn>
           </BtnDiv>
-          <Btn type="button">목록</Btn>
+          <Btn type="button" onClick={goToList}>
+            목록
+          </Btn>
         </BtnDiv2>
       </Content>
     </>

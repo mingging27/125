@@ -36,8 +36,8 @@ function App() {
         <Route path="/" element={<MainPage />} />
 
         {/* 이력서 */}
-        <Route path="/resume" element={<ResumeList />} />
-        <Route path="/resume/create" element={<ResumeCreate />} />
+        <Route path="/resumes" element={<ResumeList />} />
+        <Route path="/resumes/create" element={<ResumeCreate />} />
         <Route path="/resumes/:id" element={<Detail />} />
         <Route path="/resumes/edit/:id" element={<Edit />} />
 

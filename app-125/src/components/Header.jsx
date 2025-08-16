@@ -49,8 +49,12 @@ const SearchInput = styled.input`
   padding-left: 21px;
   font-size: 15px;
   font-weight: bold;
-  &:focus { outline: none; }
-  &::placeholder { color: #bdbdbd; }
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: #bdbdbd;
+  }
 `;
 
 const SearchBtn = styled.button`
@@ -103,12 +107,12 @@ const Category = styled.li`
 
 const Backdrop = styled.div`
   position: absolute;
-  top: 50px;   /* 카테고리 높이 */
+  top: 50px; /* 카테고리 높이 */
   left: 0;
   width: 100%;
   background: #2d66d0;
   border-bottom: 1px solid #2d66d0;
-  z-index: 5;  
+  z-index: 5;
   pointer-events: none;
 
   height: ${({ open }) => (open ? "180px" : "0")};
@@ -122,8 +126,8 @@ const SubMenu = styled.div`
   left: ${({ left }) => `${left}px`};
   width: ${({ width }) => `${width}px`};
   color: #fff;
-  background: transparent; 
-  z-index: 6;              
+  background: transparent;
+  z-index: 6;
   overflow: hidden;
 
   max-height: ${({ open }) => (open ? "220px" : "0")};
@@ -137,7 +141,7 @@ const SubList = styled.ul`
   padding: 10px 0;
   margin: 0;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
 `;
 
 const SubItem = styled.li`
@@ -148,7 +152,9 @@ const SubItem = styled.li`
   cursor: pointer;
   border-radius: 8px;
 
-  &:hover { background: rgba(255, 255, 255, 0.14); }
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
 `;
 
 function Header() {
@@ -224,12 +230,7 @@ function Header() {
       <Top>
         <AppLogo src={logo} onClick={() => navigate("/")} />
         <SearchBox onSubmit={handleSearch}>
-          <SearchInput
-            type="text"
-            placeholder="검색어를 입력하세요"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-          />
+          <SearchInput type="text" placeholder="검색어를 입력하세요" value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />
           <SearchBtn type="submit">
             <SearchBtnImg src={searchicon} alt="검색" />
           </SearchBtn>
@@ -237,15 +238,10 @@ function Header() {
       </Top>
       <Navigation ref={navRef}>
         <Category onClick={() => navigate("/recruit")}>구인 / 구직</Category>
-        <Category onClick={() => navigate("/resume")}>이력서</Category>
+        <Category onClick={() => navigate("/resumes")}>이력서</Category>
         <Category onClick={() => navigate("/community")}>커뮤니티</Category>
 
-        <Category
-          ref={infoRef}
-          $active={isInfoOpen}
-          onMouseEnter={openInfo}
-          onClick={() => navigate("/infoboard/trend")}
-        >
+        <Category ref={infoRef} $active={isInfoOpen} onMouseEnter={openInfo} onClick={() => navigate("/infoboard/trend")}>
           정보게시판
         </Category>
 
@@ -265,13 +261,7 @@ function Header() {
         <Backdrop open={isInfoOpen} />
 
         {/* 탭 폭만큼의 세로 드롭다운 항목 */}
-        <SubMenu
-          open={isInfoOpen}
-          left={submenuLeft}
-          width={submenuWidth}
-          onMouseEnter={openInfo}
-          onMouseLeave={scheduleClose}
-        >
+        <SubMenu open={isInfoOpen} left={submenuLeft} width={submenuWidth} onMouseEnter={openInfo} onMouseLeave={scheduleClose}>
           <SubList>
             <SubItem onClick={() => navigate("/infoboard/trend")}>취업 트렌드</SubItem>
             <SubItem onClick={() => navigate("/infoboard/edu")}>디지털 교육</SubItem>
