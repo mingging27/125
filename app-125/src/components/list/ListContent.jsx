@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import modifyBtn from "../../img/list/modify.png";
 import deleteBtn from "../../img/list/delete.png";
 
@@ -13,11 +14,12 @@ import deleteBtn from "../../img/list/delete.png";
 */
 
 const Content = styled.div`
-  width: 1280px;
-  height: 64px;
+  width: 1100px;
+  height: 60px;
   background-color: white;
-  border: 1px solid #D0D0CE;
+  border: 1px solid #d0d0ce;
   border-top: none;
+  padding-left: 10px;
 
   display: flex;
   justify-content: space-around;
@@ -27,7 +29,7 @@ const Content = styled.div`
 const Index = styled.p`
   width: 56px;
   overflow: hidden;
-  color: #6A6A65;
+  color: #6a6a65;
   font-size: 14px;
 `;
 
@@ -45,15 +47,52 @@ const BtnDiv = styled.div`
   justify-content: space-around;
 `;
 
-function ListContent({ type, index, title, date }) {
+function ListContent({ type, id, index, title, date }) {
+  const navigate = useNavigate();
+
+  const goToDetail = () => {
+    navigate(`/resumes/${id}`); // 상세 페이지 라우트로 이동
+  };
+
+  const goToEdit = () => {
+    navigate(`/resumes/edit/${id}`); // 수정 라우트로 이동
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`http://127.0.0.1:3002/api/resumes/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("삭제에 실패했습니다.");
+      }
+
+      alert("삭제가 완료되었습니다.");
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert("삭제 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
-    <Content>
-      <Index>{index}</Index>
-      <Title>{title}</Title>
-      <Date>{date}</Date>
+    <Content style={{ cursor: "pointer" }}>
+      <Index onClick={goToDetail}>{index}</Index>
+      <Title onClick={goToDetail}>{title}</Title>
+      <Date onClick={goToDetail}>{date}</Date>
       <BtnDiv>
-        {type === "resume" && <img src={modifyBtn} alt="수정" />}
-        <img src={deleteBtn} alt="삭제" />
+        {type === "resume" && <img width={15} src={modifyBtn} onClick={goToEdit} alt="수정" />}
+        <img width={15} src={deleteBtn} alt="삭제" onClick={handleDelete} style={{ cursor: "pointer" }} />
       </BtnDiv>
     </Content>
   );

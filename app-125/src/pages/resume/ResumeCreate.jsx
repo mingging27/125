@@ -4,26 +4,61 @@ import Create2 from "./Create2";
 import Create3 from "./Create3";
 import Create4 from "./Create4";
 import Create5 from "./Create5";
+import { useEffect } from "react";
 
 function ResumeForm() {
   const [step, setStep] = useState(1);
 
   // Create1 상태
   const [title, setTitle] = useState("");
-  const [name, setName] = useState("홍길동");
-  const [age, setAge] = useState("23");
-  const [gender, setGender] = useState("female");
-  const [address, setAddress] = useState("서울특별시 도봉구 도봉동");
-  const [tel, setTel] = useState("010-0000-0000");
-  const [email1, setEmail1] = useState("duksung");
-  const [email2, setEmail2] = useState("gmail.com");
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [address, setAddress] = useState("");
+  const [tel, setTel] = useState("");
+  const [email1, setEmail1] = useState("");
+  const [email2, setEmail2] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+
+  // Create1 회원 정보 자동 입력
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch("http://127.0.0.1:3002/api/user/info-for-resume", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("서버 응답 실패");
+
+        const data = await res.json();
+
+        setName(data.name || "");
+        setAge(data.age?.toString() || "");
+        setGender(data.gender || "");
+        setAddress(data.address || "");
+        setTel(data.phone || "");
+
+        if (data.email) {
+          const [localPart, domain] = data.email.split("@");
+          setEmail1(localPart || "");
+          setEmail2(domain || "");
+        }
+      } catch (err) {
+        console.error("유저 정보 불러오기 실패:", err);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   // Create2 상태
   const [school, setSchool] = useState("");
   const [status, setStatus] = useState("");
   const [careerStatus, setCareerStatus] = useState("");
-const [careers, setCareers] = useState([]);
+  const [careers, setCareers] = useState([]);
 
   // Create3 상태
   const [regionList, setRegionList] = useState([]);
@@ -62,7 +97,7 @@ const [careers, setCareers] = useState([]);
       school,
       status,
       careerStatus,
-       careers,
+      careers,
       regionList,
       occupationList,
       period,
@@ -115,17 +150,17 @@ const [careers, setCareers] = useState([]);
       {step === 2 && (
         <>
           <Create2
-  school={school}
-  setSchool={setSchool}
-  status={status}
-  setStatus={setStatus}
-  careerStatus={careerStatus}
-  setCareerStatus={setCareerStatus}
-  careers={careers}               // ✅ 추가
-  setCareers={setCareers}         // ✅ 추가
-  onNext={goNextStep}
-  goPrev={goPrevStep}
-/>
+            school={school}
+            setSchool={setSchool}
+            status={status}
+            setStatus={setStatus}
+            careerStatus={careerStatus}
+            setCareerStatus={setCareerStatus}
+            careers={careers} // ✅ 추가
+            setCareers={setCareers} // ✅ 추가
+            onNext={goNextStep}
+            goPrev={goPrevStep}
+          />
         </>
       )}
 
@@ -146,7 +181,7 @@ const [careers, setCareers] = useState([]);
             setTime={setTime}
             onNext={goNextStep}
             goPrev={goPrevStep}
-          />  
+          />
         </>
       )}
 
@@ -169,12 +204,7 @@ const [careers, setCareers] = useState([]);
 
       {step === 5 && (
         <>
-          <Create5
-            selfIntro={selfIntro}
-            setSelfIntro={setSelfIntro}
-            onSubmit={handleSubmit}
-            goPrev={goPrevStep}
-          />
+          <Create5 selfIntro={selfIntro} setSelfIntro={setSelfIntro} onSubmit={handleSubmit} goPrev={goPrevStep} />
         </>
       )}
     </>

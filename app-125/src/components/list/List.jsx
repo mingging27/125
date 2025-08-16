@@ -13,18 +13,18 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
     <List type={"이력서"} data={리스트 형태의 데이터}/>
 */
 
-const PositionWrap = styled.div `
-`;
+const PositionWrap = styled.div``;
 
 const ListTitle = styled.h2`
   color: black;
   font-weight: bold;
   font-size: 24px;
   margin-left: 10px;
+  margin-bottom: 30px;
 `;
 
-const ListWrap = styled.div` 
-  width: 1280px;
+const ListWrap = styled.div`
+  width: 1100px;
   display: column;
   justify-content: center;
 `;
@@ -34,11 +34,13 @@ const Content = styled.div`
 `;
 
 const SubTitle = styled.div`
-  width: 1280px;
-  height: 64px;
+  width: 1100px;
+  height: 50px;
   background-color: #f9fbfc;
   border: 1px solid #d0d0ce;
   border-bottom: none;
+  padding-left: 7px;
+  margin: 0;
 
   display: flex;
   justify-content: space-around;
@@ -90,6 +92,10 @@ const theme = createTheme({
 function List({ type, data }) {
   const [stockList, setStockList] = useState(data);
 
+  useEffect(() => {
+    setStockList(data);
+  }, [data]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const lastPage = Math.ceil(stockList.length / itemsPerPage);
@@ -106,40 +112,40 @@ function List({ type, data }) {
   return (
     <>
       <PositionWrap>
-      <ListTitle>{type}</ListTitle>
-      <ListWrap>
-      <Content>
-        <SubTitle>
-          <Index>번호</Index>
-          <Title>제목</Title>
-          <Date>작성일</Date>
-          <BtnDiv></BtnDiv>
-        </SubTitle>
-        
-        {currentList.map((item, idx) => (
-  <ListContent
-    key={item.id}
-    type={type === "이력서" ? "resume" : "default"}
-    index={indexOfFirstItem + idx + 1}
-    title={item.title}
-    date={item.date}
-  />
-))}
-      </Content>
-      <PaginationWrap>
-        <ThemeProvider theme={theme}>
-        <Pagination
-          page={currentPage}
-          count={lastPage}
-          shape={"rounded"}
-          onChange={handlePageChange}
-          siblingCount={2} // 현재 페이지 좌우 몇 개 보여줄지
-          boundaryCount={1} // 처음과 끝 몇 개 보여줄지
-        
-        />
-      </ThemeProvider>
-      </PaginationWrap>
-      </ListWrap>
+        <ListTitle>{type}</ListTitle>
+        <ListWrap>
+          <Content>
+            <SubTitle>
+              <Index>번호</Index>
+              <Title>제목</Title>
+              <Date>작성일</Date>
+              <BtnDiv></BtnDiv>
+            </SubTitle>
+
+            {currentList.map((item, idx) => (
+              <ListContent
+                key={item.id}
+                type={type === "이력서" ? "resume" : "default"}
+                index={indexOfFirstItem + idx + 1} // 이건 화면 표시용
+                id={item.id} // 삭제 API용 id 전달
+                title={item.title}
+                date={item.date}
+              />
+            ))}
+          </Content>
+          <PaginationWrap>
+            <ThemeProvider theme={theme}>
+              <Pagination
+                page={currentPage}
+                count={lastPage}
+                shape={"rounded"}
+                onChange={handlePageChange}
+                siblingCount={2} // 현재 페이지 좌우 몇 개 보여줄지
+                boundaryCount={1} // 처음과 끝 몇 개 보여줄지
+              />
+            </ThemeProvider>
+          </PaginationWrap>
+        </ListWrap>
       </PositionWrap>
     </>
   );
