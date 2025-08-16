@@ -4,8 +4,8 @@ import CustomProgressBar from "../../components/resume/CustomProgressBar";
 
 const Content = styled.div`
   height: 1000px;
-  padding-top: 160px;
-  background-color: #FDF8F4;
+  padding-top: 170px;
+  background-color: #fdfcfc;
 
   display: flex;
   justify-content: center;
@@ -14,16 +14,16 @@ const Content = styled.div`
 const PositionWrap = styled.div``;
 
 const Title = styled.h2`
-  color: #5EC27D;
+  color: #000000;
   font-weight: bold;
-  font-size: 32px;
-  margin-bottom: 57px;
+  font-size: 24px;
+  margin-bottom: 30px;
 `;
 
 const Subtitle = styled.h3`
   font-weight: bold;
   margin: 0;
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 3px;
 `;
 
@@ -40,7 +40,7 @@ const Essential = styled.span`
 
 const Box = styled.div`
   margin-top: 48px;
-  width: 1271px;
+  width: 1177px;
   border: none;
   background-color: white;
   border-radius: 20px;
@@ -95,10 +95,9 @@ const Input = styled.input`
   background-color: #fff0;
 `;
 
-const Input2 = styled(Input) `
+const Input2 = styled(Input)`
   width: 410px;
 `;
-
 
 const Select = styled.select`
   padding-left: 10px;
@@ -148,6 +147,14 @@ const Edit = styled.button`
   /*폰트*/
   font-size: 18px;
   font-weight: bold;
+
+  /* 호버 효과 */
+  &:hover {
+    background-color: #f0f5ff;
+    border-color: #5a7ed8;
+    color: #5a7ed8;
+    cursor: pointer;
+  }
 `;
 
 const Delete = styled(Edit)`
@@ -175,9 +182,14 @@ const Add = styled.button`
   /*폰트*/
   font-size: 18px;
   font-weight: bold;
+
+          /* 호버 효과 */
+  &:hover {
+    background-color: #81d29d;
+    cursor: pointer;
 `;
 
-const BtnDiv = styled.div `
+const BtnDiv = styled.div`
   width: 100%;
   margin-top: 60px;
   display: flex;
@@ -185,22 +197,28 @@ const BtnDiv = styled.div `
 `;
 
 const Btn = styled.button`
-    /*버튼 디자인*/
-    width: 86px;
-    height: 60px;
-    border: none;
-    background-color: #2D66D0;
-    border-radius: 30px;
-    box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+  /*버튼 디자인*/
+  width: 86px;
+  height: 60px;
+  border: none;
+  background-color: #2d66d0;
+  border-radius: 30px;
+  box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    /*폰트*/
-    color: #ffffff;
-    font-size: 18px;
-    font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /*폰트*/
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+
+  /* 호버 효과 */
+  &:hover {
+    background-color: #5a7ed8; /* 기존 색보다 연한 파란색 */
+    cursor: pointer;
+  }
 `;
 
 function Create4({
@@ -213,7 +231,7 @@ function Create4({
   languages,
   setLanguages,
   onNext,
-  goPrev
+  goPrev,
 }) {
   const [certificateName, setCertificateName] = React.useState("");
   const [certificateYear, setCertificateYear] = React.useState("");
@@ -323,17 +341,14 @@ function Create4({
       <PositionWrap>
         <Title>이력서 작성</Title>
         <CustomProgressBar currentPage={4} />
-        
+
         {/* 자격증 정보 */}
         <Box>
           <Subtitle>자격증</Subtitle>
           <Description>자격증이 있나요?</Description>
           <Wrap>
             <InputDiv>
-              <HalfSelect
-                value={certificateStatus}
-                onChange={(e) => setCertificateStatus(e.target.value)}
-              >
+              <HalfSelect value={certificateStatus} onChange={(e) => setCertificateStatus(e.target.value)}>
                 <option value="" disabled hidden>
                   선택
                 </option>
@@ -366,22 +381,14 @@ function Create4({
               <Label>
                 자격증명 <Essential>*</Essential>
               </Label>
-              <Input
-                type="text"
-                value={certificateName}
-                onChange={(e) => setCertificateName(e.target.value)}
-              />
+              <Input type="text" value={certificateName} onChange={(e) => setCertificateName(e.target.value)} />
             </Wrap>
 
             <Wrap>
               <Label>
                 취득년도 <Essential>*</Essential>
               </Label>
-              <Input2
-                type="text"
-                value={certificateYear}
-                onChange={(e) => setCertificateYear(e.target.value)}
-              />
+              <Input2 type="text" value={certificateYear} onChange={(e) => setCertificateYear(e.target.value)} />
             </Wrap>
 
             <Add type="button" onClick={handleAddCertificate}>
@@ -396,10 +403,7 @@ function Create4({
           <Description>공인 어학성적이 있나요?</Description>
           <Wrap>
             <InputDiv>
-              <HalfSelect
-                value={languageStatus}
-                onChange={(e) => setLanguageStatus(e.target.value)}
-              >
+              <HalfSelect value={languageStatus} onChange={(e) => setLanguageStatus(e.target.value)}>
                 <option value="" disabled hidden>
                   선택
                 </option>
@@ -432,33 +436,21 @@ function Create4({
               <Label>
                 공인시험 <Essential>*</Essential>
               </Label>
-              <Input
-                type="text"
-                value={languageTest}
-                onChange={(e) => setLanguageTest(e.target.value)}
-              />
+              <Input type="text" value={languageTest} onChange={(e) => setLanguageTest(e.target.value)} />
             </Wrap>
 
             <Wrap>
               <Label>
                 점수 / 등급 <Essential>*</Essential>
               </Label>
-              <Input2
-                type="text"
-                value={languageScore}
-                onChange={(e) => setLanguageScore(e.target.value)}
-              />
+              <Input2 type="text" value={languageScore} onChange={(e) => setLanguageScore(e.target.value)} />
             </Wrap>
 
             <Wrap>
               <Label>
                 취득년도 <Essential>*</Essential>
               </Label>
-              <Input2
-                type="text"
-                value={languageYear}
-                onChange={(e) => setLanguageYear(e.target.value)}
-              />
+              <Input2 type="text" value={languageYear} onChange={(e) => setLanguageYear(e.target.value)} />
             </Wrap>
 
             <Add type="button" onClick={handleAddLanguage}>
@@ -467,11 +459,11 @@ function Create4({
           </DetailBox>
         )}
         <BtnDiv>
-{/* 이전 */}
-        <Btn onClick={goPrev}>← 이전</Btn>
-        {/* 다음 */}
-       <Btn onClick={handleNext}>다음 →</Btn>
-       </BtnDiv>
+          {/* 이전 */}
+          <Btn onClick={goPrev}>← 이전</Btn>
+          {/* 다음 */}
+          <Btn onClick={handleNext}>다음 →</Btn>
+        </BtnDiv>
       </PositionWrap>
     </Content>
   );

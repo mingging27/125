@@ -5,6 +5,7 @@ import Create3 from "./Create3";
 import Create4 from "./Create4";
 import Create5 from "./Create5";
 import { useEffect } from "react";
+import Header from "../../components/Header";
 
 function ResumeForm() {
   const [step, setStep] = useState(1);
@@ -120,6 +121,7 @@ function ResumeForm() {
 
   return (
     <>
+      <Header />
       {step === 1 && (
         <Create1
           title={title}

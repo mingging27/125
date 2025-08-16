@@ -24,6 +24,11 @@ const Content = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+
+  &:hover {
+    background-color: #f8f8f8ff;
+    box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const Index = styled.p`

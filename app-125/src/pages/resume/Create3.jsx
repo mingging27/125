@@ -5,36 +5,33 @@ import CustomProgressBar from "../../components/resume/CustomProgressBar";
 
 const Content = styled.div`
   height: 1600px;
-  padding-top: 160px;
-  background-color: #FDF8F4;
+  padding-top: 170px;
+  background-color: #fdfcfc;
 
   display: flex;
   justify-content: center;
 `;
 
-const PositionWrap = styled.div `
-`;
+const PositionWrap = styled.div``;
 
 const Title = styled.h2`
-  color: #5EC27D;
+  color: #000000;
   font-weight: bold;
-  font-size: 32px;
-  margin-bottom: 57px;
+  font-size: 24px;
+  margin-bottom: 30px;
 `;
-
 const Subtitle = styled.h3`
   font-weight: bold;
-    margin: 0;
-  font-size: 24px;
+  margin: 0;
+  font-size: 20px;
   margin-bottom: 3px;
 `;
 
-const Description = styled.p `
-    color: #B1B5C3;
-    font-size: 18px;
-    margin: 0;
+const Description = styled.p`
+  color: #b1b5c3;
+  font-size: 18px;
+  margin: 0;
   margin-bottom: 20px;
-
 `;
 
 const Essential = styled.span`
@@ -42,8 +39,8 @@ const Essential = styled.span`
 `;
 
 const Box = styled.div`
-    margin-top: 48px;
-  width: 1271px;
+  margin-top: 48px;
+  width: 1177px;
   border: none;
   background-color: white;
   border-radius: 20px;
@@ -54,62 +51,61 @@ const Box = styled.div`
   position: relative;
 `;
 
-const DetailBox = styled(Box) `
+const DetailBox = styled(Box)`
   margin: 0;
-  background-color: #F8FCF8;
-
+  background-color: #f8fcf8;
 `;
 
-const InputDiv = styled.div `
-    display: flex;
-    aligh-items: center;
-    text-align: center;
+const InputDiv = styled.div`
+  display: flex;
+  aligh-items: center;
+  text-align: center;
 `;
 
-const CareerDetail = styled.div `
+const CareerDetail = styled.div`
   padding-left: 10px;
-  width:  955px;
-    height: 48px;
-    border: 2px solid #D9D9D9;
-    color:rgb(164, 164, 164);
-    font-size: 18px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    position: relative;
-    `;
+  width: 955px;
+  height: 48px;
+  border: 2px solid #d9d9d9;
+  color: rgb(164, 164, 164);
+  font-size: 18px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  position: relative;
+`;
 
-  const Label = styled.p`
-      font-weight: bold;
-      color: #B1B5C3;
-      width: 120px;
-  `;
+const Label = styled.p`
+  font-weight: bold;
+  color: #b1b5c3;
+  width: 120px;
+`;
 
 const Input = styled.input`
-    padding-left: 10px;
-  width:  450px;
-    height: 48px;
-    border: 2px solid #D9D9D9;
-    color: #777E90;
-    font-size: 18px;
-    border-radius: 12px;
+  padding-left: 10px;
+  width: 450px;
+  height: 48px;
+  border: 2px solid #d9d9d9;
+  color: #777e90;
+  font-size: 18px;
+  border-radius: 12px;
 `;
 
-const DetailInput = styled(Input) `
+const DetailInput = styled(Input)`
   background-color: #fff0;
   width: 1055px;
 `;
 
 const Select = styled.select`
-    padding-left: 10px;
-  width:  530px;
-    height: 48px;
-    border: 2px solid #D9D9D9;
-    color: #777E90;
-    font-size: 18px;
-    border-radius: 12px;
-    margin-right: 47px;
+  padding-left: 10px;
+  width: 530px;
+  height: 48px;
+  border: 2px solid #d9d9d9;
+  color: #777e90;
+  font-size: 18px;
+  border-radius: 12px;
+  margin-right: 47px;
 `;
 
 const Wrap = styled.div`
@@ -118,7 +114,8 @@ const Wrap = styled.div`
   align-items: center;
 `;
 
-const Wrap2 = styled(Wrap) ` // 희망 근무 조건 소제목과 내용 margin 주기 위해 추가
+const Wrap2 = styled(Wrap)`
+  // 희망 근무 조건 소제목과 내용 margin 주기 위해 추가
   margin-top: 15px;
 `;
 
@@ -126,55 +123,67 @@ const HalfSelect = styled(Select)`
   width: 340px;
 `;
 
-const Line = styled.div `
+const Line = styled.div`
   margin-top: 30px;
   margin-bottom: 30px;
-  border-top: 1px solid #5EC27D;
+  border-top: 1px solid #5ec27d;
   width: 606px;
 `;
 
 const Edit = styled.button`
-    /*버튼 디자인*/
-    width: 60px;
-    height: 32px;
-    border-radius: 30px;
-    background: #fff0;
-    border: 1px solid #2D66D0;
-    color: #2D66D0;
+  /*버튼 디자인*/
+  width: 60px;
+  height: 32px;
+  border-radius: 30px;
+  background: #fff0;
+  border: 1px solid #2d66d0;
+  color: #2d66d0;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    position: absolute;
-    right: 50px;
-    
-    /*폰트*/
-    font-size: 18px;
-    font-weight: bold;
+  position: absolute;
+  right: 50px;
+
+  /*폰트*/
+  font-size: 18px;
+  font-weight: bold;
+
+  /* 호버 효과 */
+  &:hover {
+    background-color: #f0f5ff;
+    border-color: #5a7ed8;
+    color: #5a7ed8;
+    cursor: pointer;
+  }
 `;
 
 const Add = styled.button`
-    /*버튼 디자인*/
-    width: 64px;
-    height: 60px;
-    border-radius: 30px;
-    background: #5EC27D;
-    border: none;
-    color: #fff;
-      box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+  /*버튼 디자인*/
+  width: 64px;
+  height: 60px;
+  border-radius: 30px;
+  background: #5ec27d;
+  border: none;
+  color: #fff;
+  box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    /*폰트*/
-    font-size: 18px;
-    font-weight: bold;
+  /*폰트*/
+  font-size: 18px;
+  font-weight: bold;
+
+        /* 호버 효과 */
+  &:hover {
+    background-color: #81d29d;
+    cursor: pointer;
 `;
 
-const AddElementDiv = styled.div `
+const AddElementDiv = styled.div`
   margin-top: 20px;
   display: flex;
   gap: 12px;
@@ -184,21 +193,24 @@ const AddElement = styled.div`
   display: flex;
   align-items: center;
   gap: 8px; /* 요소 간 간격 */
-  
+
   padding: 10px;
   font-size: 18px;
   color: #fff;
-  background-color: #FEAD5C;
+  background-color: #fead5c;
   border-radius: 12px;
-  width: fit-content;  /* ✅ 텍스트 길이에 맞춰 유동적으로 */
+  width: fit-content; /* ✅ 텍스트 길이에 맞춰 유동적으로 */
   height: 28px;
+
+  &:hover {
+    background-color: #ffbf7f; /* 기존 색보다 연한 주황색 */
+    cursor: pointer;
+  }
 `;
 
+const AddText = styled.p``;
 
-const AddText = styled.p `
-`;
-
-const Delete = styled.img `
+const Delete = styled.img`
   width: 11px;
   height: 11px;
 `;
@@ -216,7 +228,7 @@ const DayButton = styled.button`
   margin: 4px;
   font-size: 18px;
   border-radius: 30px;
-  border: 1px solid #FEAD5C;
+  border: 1px solid #fead5c;
   box-shadow: ${({ selected }) => (selected ? "inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);" : "none")};
   background-color: ${({ selected }) => (selected ? "#FEAD5C" : "#fff")};
   color: ${({ selected }) => (selected ? "#fff" : "#FEAD5C")};
@@ -225,9 +237,13 @@ const DayButton = styled.button`
   pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 
   transition: background-color 0.2s ease;
+
+  &:hover {
+    box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+  }
 `;
 
-const BtnDiv = styled.div `
+const BtnDiv = styled.div`
   width: 100%;
   margin-top: 60px;
   display: flex;
@@ -235,26 +251,31 @@ const BtnDiv = styled.div `
 `;
 
 const Btn = styled.button`
-    /*버튼 디자인*/
-    width: 86px;
-    height: 60px;
-    border: none;
-    background-color: #2D66D0;
-    border-radius: 30px;
-    box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+  /*버튼 디자인*/
+  width: 86px;
+  height: 60px;
+  border: none;
+  background-color: #2d66d0;
+  border-radius: 30px;
+  box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    /*폰트*/
-    color: #ffffff;
-    font-size: 18px;
-    font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /*폰트*/
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+
+  /* 호버 효과 */
+  &:hover {
+    background-color: #5a7ed8; /* 기존 색보다 연한 파란색 */
+    cursor: pointer;
+  }
 `;
 
 const days = ["월", "화", "수", "목", "금", "토", "일"];
-
 
 function Create3({
   regionList,
@@ -269,8 +290,8 @@ function Create3({
   setDay,
   time,
   setTime,
-  onNext, 
-  goPrev
+  onNext,
+  goPrev,
 }) {
   const [inputText, setInputText] = useState("");
   const [occupation, setOccupation] = useState("");
@@ -324,47 +345,34 @@ function Create3({
       alert("희망 업직종을 1개 이상 추가해주세요.");
       return;
     }
-
-    // 제출 로직 예시
-    console.log("제출 완료:");
-    console.log("근무 지역:", regionList);
-    console.log("업직종:", occupationList);
-    console.log("근무 기간:", period);
-    console.log("근무 요일:", day);
-    console.log("근무 시간:", time);
-    console.log("선택된 요일:", selectedDays);
   };
 
   // 요일 선택 토글
   const toggleDay = (dayOption) => {
-    setSelectedDays((prev) =>
-      prev.includes(dayOption)
-        ? prev.filter((d) => d !== dayOption)
-        : [...prev, dayOption]
-    );
+    setSelectedDays((prev) => (prev.includes(dayOption) ? prev.filter((d) => d !== dayOption) : [...prev, dayOption]));
   };
 
   const handleNext = () => {
-  if (regionList.length === 0) {
-    alert("희망 근무 지역을 1개 이상 추가해주세요.");
-    return;
-  }
+    if (regionList.length === 0) {
+      alert("희망 근무 지역을 1개 이상 추가해주세요.");
+      return;
+    }
 
-  if (occupationList.length === 0) {
-    alert("희망 업직종을 1개 이상 추가해주세요.");
-    return;
-  }
+    if (occupationList.length === 0) {
+      alert("희망 업직종을 1개 이상 추가해주세요.");
+      return;
+    }
 
-  if (!period) {
-    alert("희망 근무 형태를 선택해주세요.");
-    return;
-  }
+    if (!period) {
+      alert("희망 근무 형태를 선택해주세요.");
+      return;
+    }
 
-  // 유효성 검사 통과 시 다음 단계로 이동
-  if (onNext) {
-    onNext();
-  }
-};
+    // 유효성 검사 통과 시 다음 단계로 이동
+    if (onNext) {
+      onNext();
+    }
+  };
 
   // 이하 JSX는 기존 코드 유지, props로 받아온 상태 및 set함수 사용
   return (
@@ -372,7 +380,7 @@ function Create3({
       <Content>
         <PositionWrap>
           <Title>이력서 작성</Title>
-      <CustomProgressBar currentPage={3} />
+          <CustomProgressBar currentPage={3} />
 
           {/* 희망 근무 지역 */}
           <Box>
@@ -381,12 +389,7 @@ function Create3({
             </Subtitle>
             <Description>원하는 근무 지역을 선택해주세요.</Description>
             <Wrap>
-              <Input
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="예: 서울시 도봉구"
-              />
+              <Input type="text" value={inputText} onChange={(e) => setInputText(e.target.value)} placeholder="예: 서울시 도봉구" />
               <Add type="button" onClick={handleAdd}>
                 추가
               </Add>
@@ -397,12 +400,7 @@ function Create3({
                 {regionList.map((region, index) => (
                   <AddElement key={index}>
                     <AddText>{region}</AddText>
-                    <Delete
-                      src={deleteimg}
-                      onClick={() => handleDelete(index)}
-                      alt="삭제"
-                      style={{ cursor: "pointer" }}
-                    />
+                    <Delete src={deleteimg} onClick={() => handleDelete(index)} alt="삭제" style={{ cursor: "pointer" }} />
                   </AddElement>
                 ))}
               </AddElementDiv>
@@ -416,10 +414,7 @@ function Create3({
             </Subtitle>
             <Description>원하는 직종을 선택해주세요.</Description>
             <Wrap>
-              <Select
-                value={occupation}
-                onChange={(e) => setOccupation(e.target.value)}
-              >
+              <Select value={occupation} onChange={(e) => setOccupation(e.target.value)}>
                 <option value="" disabled hidden>
                   업직종 선택
                 </option>
@@ -440,12 +435,7 @@ function Create3({
                 {occupationList.map((item, index) => (
                   <AddElement key={index}>
                     <AddText>{item}</AddText>
-                    <Delete
-                      src={deleteimg}
-                      onClick={() => handleOccupationDelete(index)}
-                      alt="삭제"
-                      style={{ cursor: "pointer" }}
-                    />
+                    <Delete src={deleteimg} onClick={() => handleOccupationDelete(index)} alt="삭제" style={{ cursor: "pointer" }} />
                   </AddElement>
                 ))}
               </AddElementDiv>
@@ -458,37 +448,26 @@ function Create3({
               희망 근무 형태 <Essential>*</Essential>
             </Subtitle>
             <Description>원하는 근무 형태를 선택해주세요.</Description>
-              <Select
-                value={period}
-                onChange={(e) => setPeriod(e.target.value)}
-              >
-                <option value="" disabled hidden>
-                  근무 형태 선택
-                </option>
-                <option value="알바">알바</option>
-                <option value="정규직">정규직</option>
-                <option value="계약직">계약직</option>
-                <option value="파견직">파견직</option>
-                <option value="인턴">인턴</option>
-              </Select>
+            <Select value={period} onChange={(e) => setPeriod(e.target.value)}>
+              <option value="" disabled hidden>
+                근무 형태 선택
+              </option>
+              <option value="알바">알바</option>
+              <option value="정규직">정규직</option>
+              <option value="계약직">계약직</option>
+              <option value="파견직">파견직</option>
+              <option value="인턴">인턴</option>
+            </Select>
           </Box>
           <Box>
             <Subtitle>희망 근무 조건</Subtitle>
-            <Edit
-              type="button"
-              onClick={() => setIsEditing(!isEditing)}
-              disabled={day === "요일 선택" && isEditing && selectedDays.length === 0}
-            >
+            <Edit type="button" onClick={() => setIsEditing(!isEditing)} disabled={day === "요일 선택" && isEditing && selectedDays.length === 0}>
               {isEditing ? "완료" : "수정"}
             </Edit>
 
             <Wrap2>
               <Label>근무기간</Label>
-              <HalfSelect
-                value={period}
-                onChange={(e) => setPeriod(e.target.value)}
-                disabled={!isEditing}
-              >
+              <HalfSelect value={period} onChange={(e) => setPeriod(e.target.value)} disabled={!isEditing}>
                 <option value="무관">무관</option>
                 <option value="하루">하루</option>
                 <option value="1주 이하">1주 이하</option>
@@ -501,11 +480,7 @@ function Create3({
             <Wrap>
               <Wrap>
                 <Label>근무요일</Label>
-                <HalfSelect
-                  value={day}
-                  onChange={(e) => setDay(e.target.value)}
-                  disabled={!isEditing}
-                >
+                <HalfSelect value={day} onChange={(e) => setDay(e.target.value)} disabled={!isEditing}>
                   <option value="무관">무관</option>
                   <option value="주말">주말</option>
                   <option value="주중">주중</option>
@@ -515,11 +490,7 @@ function Create3({
 
               <Wrap>
                 <Label>근무시간</Label>
-                <HalfSelect
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  disabled={!isEditing}
-                >
+                <HalfSelect value={time} onChange={(e) => setTime(e.target.value)} disabled={!isEditing}>
                   <option value="무관">무관</option>
                   <option value="오전 (6-12)">오전 (6-12)</option>
                   <option value="오후 (12-18)">오후 (12-18)</option>
@@ -535,12 +506,7 @@ function Create3({
                 {days.map((dayOption) => {
                   const isSelected = selectedDays.includes(dayOption);
                   return (
-                    <DayButton
-                      key={dayOption}
-                      onClick={() => isEditing && toggleDay(dayOption)}
-                      selected={isSelected}
-                      disabled={!isEditing}
-                    >
+                    <DayButton key={dayOption} onClick={() => isEditing && toggleDay(dayOption)} selected={isSelected} disabled={!isEditing}>
                       {dayOption}
                     </DayButton>
                   );
@@ -549,11 +515,13 @@ function Create3({
             )}
           </Box>
           <BtnDiv>
-          {/* 이전 */}
-        <Btn onClick={goPrev}>← 이전</Btn>
-        {/* 다음 */}
-        <Btn onClick={handleNext} disabled={isEditing}>다음 →</Btn>
-</BtnDiv>
+            {/* 이전 */}
+            <Btn onClick={goPrev}>← 이전</Btn>
+            {/* 다음 */}
+            <Btn onClick={handleNext} disabled={isEditing}>
+              다음 →
+            </Btn>
+          </BtnDiv>
         </PositionWrap>
       </Content>
     </>

@@ -268,6 +268,12 @@ const Btn = styled.button`
   color: #ffffff;
   font-size: 18px;
   font-weight: bold;
+
+  /* 호버 효과 */
+  &:hover {
+    background-color: #5a7ed8; /* 기존 색보다 연한 파란색 */
+    cursor: pointer;
+  }
 `;
 
 const BtnDiv = styled.div`

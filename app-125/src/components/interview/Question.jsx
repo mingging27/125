@@ -53,6 +53,11 @@ const Qbutton = styled.button`
   color: #ffffff;
   font-size: 18px;
   font-weight: bold;
+
+    /* 호버 효과 */
+  &:hover {
+    background-color: #81d29d;
+    cursor: pointer;
 `;
 
 const Adiv = styled(Qdiv)`

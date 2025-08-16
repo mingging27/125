@@ -31,7 +31,7 @@ function ResumeList() {
 
         const data = await response.json();
 
-        // created_at → yyyy-mm-dd 포맷으로 변환
+        // 날짜 포맷으로 변환
         const formatted = data.resumes.map((item) => ({
           id: item.resume_id,
           title: item.title,

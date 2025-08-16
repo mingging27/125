@@ -80,6 +80,12 @@ const Submit = styled.button`
   color: #ffffff;
   font-size: 18px;
   font-weight: bold;
+
+  /* 호버 효과 */
+  &:hover {
+    background-color: #81d29d;
+    cursor: pointer;
+  }
 `;
 
 const Subtitle = styled.p`
@@ -94,6 +100,10 @@ const SignupDiv = styled.div`
 
 const Signup = styled.p`
   color: #8d9097ff;
+
+  &:hover {
+    color: #b9bcc5ff;
+  }
 `;
 const Find = styled(Signup)`
   margin-top: 40px;
@@ -134,7 +144,6 @@ function Login() {
         return;
       }
 
-      console.log(data.token);
       alert(data.message || "로그인 성공");
       if (data.token) {
         localStorage.setItem("token", data.token);
