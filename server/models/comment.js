@@ -1,3 +1,4 @@
+//server/models/comment.js
 module.exports = (sequelize, DataTypes) => {
   const Comment = sequelize.define('Comment', {
     comment_id: {
@@ -25,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    post_id: {
+    community_post_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
