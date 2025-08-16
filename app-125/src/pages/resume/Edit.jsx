@@ -60,20 +60,22 @@ function Edit() {
   const [school, setSchool] = useState("");
   const [status, setStatus] = useState("");
   const [careerStatus, setCareerStatus] = useState("");
-  const [careers, setCareers] = useState([]);
+  const [career, setCareer] = useState("");
+  const [careersPeriod, setCareersPeriod] = useState("");
 
   // Create3 상태
-  const [regionList, setRegionList] = useState([]);
-  const [occupationList, setOccupationList] = useState([]);
+  const [region, setRegion] = useState("");
+  const [occupation, setOccupation] = useState("");
   const [isEditing2, setIsEditing2] = useState(false);
   const [period, setPeriod] = useState("무관");
   const [day, setDay] = useState("무관");
   const [time, setTime] = useState("무관");
+  const [selectedDays, setSelectedDays] = useState([]);
 
   // Create4 상태
-  const [certificateStatus, setCertificateStatus] = useState("");
+  const [certificateStatus, setCertificateStatus] = useState(false);
   const [certificates, setCertificates] = useState([]);
-  const [languageStatus, setLanguageStatus] = useState("");
+  const [languageStatus, setLanguageStatus] = useState(false);
   const [languages, setLanguages] = useState([]);
 
   // Create5 상태
@@ -97,16 +99,18 @@ function Edit() {
         setSchool(r.school || "");
         setStatus(r.enrollment_status || "");
         setCareerStatus(r.career_type || "");
-        setCareers(r.company_name ? [{ company: r.company_name, period: r.work_period_text }] : []);
-        setRegionList(r.desired_location ? r.desired_location.split(", ").filter(Boolean) : []);
-        setOccupationList(r.desired_job_category ? r.desired_job_category.split(", ").filter(Boolean) : []);
+        setCareer(r.company_name || "");
+        setRegion(r.desired_location || "");
+        setOccupation(r.desired_job_category || "");
         setPeriod(r.desired_work_duration || "무관");
-        setDay(r.preferredDays?.length > 0 ? r.preferredDays[0].day : "무관");
         setTime(r.preferred_time || "무관");
-        setCertificateStatus(r.has_certificate ? "있음" : "없음");
-        setCertificates(r.certificates?.map((c) => ({ name: c.certificate_name, year: c.acquisition_year })) || []);
-        setLanguageStatus(r.has_language_score ? "있음" : "없음");
-        setLanguages(r.languageScores?.map((l) => ({ name: l.test_name, score: l.score, year: l.acquisition_year })) || []);
+        setDay(r.preferred_day_type || "무관"); // preferred_day_type 사용
+        setSelectedDays(r.preferredDays || []); // 배열 그대로
+        setCareersPeriod(r.work_period_text || "");
+        setCertificateStatus(r.has_certificate || false);
+        setCertificates(r.certificates || []);
+        setLanguages(r.languageScores || []);
+        setLanguageStatus(r.has_language_score || false);
         setSelfIntro(r.self_introduction || "");
       } catch (err) {
         console.error("기존 이력서 불러오기 실패:", err);
@@ -120,7 +124,62 @@ function Edit() {
   const goPrevStep = () => setStep((prev) => prev - 1);
 
   const handleSubmit = async () => {
-    // PUT 요청 코드 여기에 작성
+    try {
+      const token = localStorage.getItem("token");
+
+      const resumeData = {
+        resume_title: title,
+        school,
+        enrollment_status: status,
+        career_type: careerStatus,
+        company_name: career,
+        work_period_text: careersPeriod,
+        desired_location: region,
+        desired_job_category: occupation,
+        desired_work_duration: period,
+        preferred_day_type: day,
+        preferred_time: time,
+        has_certificate: certificateStatus,
+        has_language_score: languageStatus,
+        self_introduction: selfIntro,
+        certificates: certificates.map((c) => {
+          const year = Number(c.acquisition_year);
+          return {
+            certificate_name: c.certificate_name || "",
+            acquisition_year: year >= 1901 && year <= 2155 ? year : null,
+          };
+        }),
+        languageScores: languages.map((l) => ({
+          test_name: l.test_name,
+          score: l.score,
+          acquisition_year: Number(l.acquisition_year),
+        })),
+        preferredDays: selectedDays.map((d) => ({ day: d.day })),
+        memberInfo: {
+          username: name,
+          age,
+          phone_number: tel,
+          gender,
+          address,
+        },
+      };
+
+      const res = await fetch(`http://127.0.0.1:3002/api/resumes/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(resumeData),
+      });
+
+      if (!res.ok) throw new Error("수정 실패");
+
+      alert("이력서가 수정되었습니다.");
+    } catch (err) {
+      console.error("이력서 수정 중 오류:", err);
+      alert("수정 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -160,18 +219,20 @@ function Edit() {
           setStatus={setStatus}
           careerStatus={careerStatus}
           setCareerStatus={setCareerStatus}
-          careers={careers}
-          setCareers={setCareers}
+          career={career}
+          setCareer={setCareer}
+          careersPeriod={careersPeriod}
+          setCareersPeriod={setCareersPeriod}
           onNext={goNextStep}
           goPrev={goPrevStep}
         />
       )}
       {step === 3 && (
         <Create3
-          regionList={regionList}
-          setRegionList={setRegionList}
-          occupationList={occupationList}
-          setOccupationList={setOccupationList}
+          region={region}
+          setRegion={setRegion}
+          occupation={occupation}
+          setOccupation={setOccupation}
           isEditing={isEditing2}
           setIsEditing={setIsEditing2}
           period={period}
@@ -182,6 +243,8 @@ function Edit() {
           setTime={setTime}
           onNext={goNextStep}
           goPrev={goPrevStep}
+          selectedDays={selectedDays}
+          setSelectedDays={setSelectedDays}
         />
       )}
       {step === 4 && (

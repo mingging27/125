@@ -197,6 +197,26 @@ function Header() {
     }
   };
 
+  const goToList = () => {
+    const isLoggedIn = !!localStorage.getItem("token"); // 토큰이 있는지 확인 예시
+    if (isLoggedIn) {
+      navigate(`/resumes`);
+    } else {
+      alert("로그인 후 이용 가능합니다.");
+      navigate(`/login`); // 로그인 페이지로 이동
+    }
+  };
+
+  const goToMypage = () => {
+    const isLoggedIn = !!localStorage.getItem("token"); // 토큰이 있는지 확인 예시
+    if (isLoggedIn) {
+      navigate(`/mypage`);
+    } else {
+      alert("로그인 후 이용 가능합니다.");
+      navigate(`/login`); // 로그인 페이지로 이동
+    }
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (!searchKeyword.trim()) return;
@@ -238,14 +258,14 @@ function Header() {
       </Top>
       <Navigation ref={navRef}>
         <Category onClick={() => navigate("/recruit")}>구인 / 구직</Category>
-        <Category onClick={() => navigate("/resumes")}>이력서</Category>
+        <Category onClick={goToList}>이력서</Category>
         <Category onClick={() => navigate("/community")}>커뮤니티</Category>
 
         <Category ref={infoRef} $active={isInfoOpen} onMouseEnter={openInfo} onClick={() => navigate("/infoboard/trend")}>
           정보게시판
         </Category>
 
-        <Category onClick={() => navigate("/mypage")}>마이페이지</Category>
+        <Category onClick={goToMypage}>마이페이지</Category>
 
         {isLoggedIn ? (
           <Category onClick={handleLogout} style={{ cursor: "pointer" }}>

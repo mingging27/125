@@ -278,10 +278,12 @@ const Btn = styled.button`
 const days = ["월", "화", "수", "목", "금", "토", "일"];
 
 function Create3({
-  regionList,
-  setRegionList,
-  occupationList,
-  setOccupationList,
+  selectedDays,
+  setSelectedDays,
+  region,
+  setRegion,
+  occupation,
+  setOccupation,
   isEditing,
   setIsEditing,
   period,
@@ -294,77 +296,29 @@ function Create3({
   goPrev,
 }) {
   const [inputText, setInputText] = useState("");
-  const [occupation, setOccupation] = useState("");
-  const [selectedDays, setSelectedDays] = useState([]);
-
-  const handleAdd = () => {
-    const trimmed = inputText.trim();
-    if (!trimmed) {
-      alert("근무 지역을 입력해주세요.");
-      return;
-    }
-
-    setRegionList([...regionList, trimmed]);
-    setInputText("");
-  };
-
-  const handleDelete = (index) => {
-    const updated = [...regionList];
-    updated.splice(index, 1);
-    setRegionList(updated);
-  };
-
-  const handleOccupationAdd = () => {
-    if (!occupation) {
-      alert("업직종을 선택해주세요.");
-      return;
-    }
-
-    if (occupationList.includes(occupation)) {
-      alert("이미 추가된 업직종입니다.");
-      return;
-    }
-
-    setOccupationList([...occupationList, occupation]);
-    setOccupation("");
-  };
-
-  const handleOccupationDelete = (index) => {
-    const updated = [...occupationList];
-    updated.splice(index, 1);
-    setOccupationList(updated);
-  };
-
-  const handleSubmit = () => {
-    if (regionList.length === 0) {
-      alert("희망 근무 지역을 1개 이상 추가해주세요.");
-      return;
-    }
-
-    if (occupationList.length === 0) {
-      alert("희망 업직종을 1개 이상 추가해주세요.");
-      return;
-    }
-  };
 
   // 요일 선택 토글
   const toggleDay = (dayOption) => {
-    setSelectedDays((prev) => (prev.includes(dayOption) ? prev.filter((d) => d !== dayOption) : [...prev, dayOption]));
+    setSelectedDays((prev) => {
+      const exists = prev.find((d) => d.day === dayOption);
+      if (exists) {
+        // 이미 있으면 제거
+        return prev.filter((d) => d.day !== dayOption);
+      } else {
+        // 없으면 추가
+        return [...prev, { day: dayOption }];
+      }
+    });
   };
 
   const handleNext = () => {
-    if (regionList.length === 0) {
-      alert("희망 근무 지역을 1개 이상 추가해주세요.");
+    if (region == "") {
+      alert("희망 근무 지역을 추가해주세요.");
       return;
     }
 
-    if (occupationList.length === 0) {
-      alert("희망 업직종을 1개 이상 추가해주세요.");
-      return;
-    }
-
-    if (!period) {
-      alert("희망 근무 형태를 선택해주세요.");
+    if (occupation == "") {
+      alert("희망 업직종을 추가해주세요.");
       return;
     }
 
@@ -389,22 +343,8 @@ function Create3({
             </Subtitle>
             <Description>원하는 근무 지역을 선택해주세요.</Description>
             <Wrap>
-              <Input type="text" value={inputText} onChange={(e) => setInputText(e.target.value)} placeholder="예: 서울시 도봉구" />
-              <Add type="button" onClick={handleAdd}>
-                추가
-              </Add>
+              <Input type="text" value={region} onChange={(e) => setRegion(e.target.value)} placeholder="예: 서울시 도봉구" />
             </Wrap>
-
-            {regionList.length > 0 && (
-              <AddElementDiv>
-                {regionList.map((region, index) => (
-                  <AddElement key={index}>
-                    <AddText>{region}</AddText>
-                    <Delete src={deleteimg} onClick={() => handleDelete(index)} alt="삭제" style={{ cursor: "pointer" }} />
-                  </AddElement>
-                ))}
-              </AddElementDiv>
-            )}
           </Box>
 
           {/* 희망 근무 업직종 */}
@@ -416,49 +356,22 @@ function Create3({
             <Wrap>
               <Select value={occupation} onChange={(e) => setOccupation(e.target.value)}>
                 <option value="" disabled hidden>
-                  업직종 선택
+                  선택
                 </option>
-                <option value="인사/HR">인사/HR</option>
-                <option value="마케팅">마케팅</option>
-                <option value="디자인">디자인</option>
-                <option value="개발">개발</option>
-                <option value="영업">영업</option>
-                <option value="고객상담">고객상담</option>
+                <option value="직무 전체">직무 전체</option>
+                <option value="기획·경영">기획·경영</option>
+                <option value="마케팅·영업">마케팅·영업</option>
+                <option value="회계·인사·지원">회계·인사·지원</option>
+                <option value="IT·데이터">IT·데이터</option>
+                <option value="디자인·콘텐츠">디자인·콘텐츠</option>
+                <option value="생산·물류">생산·물류</option>
+                <option value="교육·의료·연구">교육·의료·연구</option>
+                <option value="공공·금융">공공·금융</option>
               </Select>
-              <Add type="button" onClick={handleOccupationAdd}>
-                추가
-              </Add>
             </Wrap>
-
-            {occupationList.length > 0 && (
-              <AddElementDiv>
-                {occupationList.map((item, index) => (
-                  <AddElement key={index}>
-                    <AddText>{item}</AddText>
-                    <Delete src={deleteimg} onClick={() => handleOccupationDelete(index)} alt="삭제" style={{ cursor: "pointer" }} />
-                  </AddElement>
-                ))}
-              </AddElementDiv>
-            )}
           </Box>
 
           {/* 희망 근무 형태 */}
-          <Box>
-            <Subtitle>
-              희망 근무 형태 <Essential>*</Essential>
-            </Subtitle>
-            <Description>원하는 근무 형태를 선택해주세요.</Description>
-            <Select value={period} onChange={(e) => setPeriod(e.target.value)}>
-              <option value="" disabled hidden>
-                근무 형태 선택
-              </option>
-              <option value="알바">알바</option>
-              <option value="정규직">정규직</option>
-              <option value="계약직">계약직</option>
-              <option value="파견직">파견직</option>
-              <option value="인턴">인턴</option>
-            </Select>
-          </Box>
           <Box>
             <Subtitle>희망 근무 조건</Subtitle>
             <Edit type="button" onClick={() => setIsEditing(!isEditing)} disabled={day === "요일 선택" && isEditing && selectedDays.length === 0}>
@@ -471,10 +384,10 @@ function Create3({
                 <option value="무관">무관</option>
                 <option value="하루">하루</option>
                 <option value="1주 이하">1주 이하</option>
-                <option value="1주 - 1개월">1주 - 1개월</option>
-                <option value="1개월 - 3개월">1개월 - 3개월</option>
-                <option value="3개월 - 6개월">3개월 - 6개월</option>
-                <option value="6개월 - 1년">6개월 - 1년</option>
+                <option value="1주 ~ 1개월">1주 - 1개월</option>
+                <option value="1개월 ~ 3개월">1개월 - 3개월</option>
+                <option value="3개월 ~ 6개월">3개월 - 6개월</option>
+                <option value="6개월 ~ 1년">6개월 - 1년</option>
               </HalfSelect>
             </Wrap2>
             <Wrap>
@@ -484,7 +397,7 @@ function Create3({
                   <option value="무관">무관</option>
                   <option value="주말">주말</option>
                   <option value="주중">주중</option>
-                  <option value="요일 선택">요일 선택</option>
+                  <option value="요일">요일 선택</option>
                 </HalfSelect>
               </Wrap>
 
@@ -492,19 +405,19 @@ function Create3({
                 <Label>근무시간</Label>
                 <HalfSelect value={time} onChange={(e) => setTime(e.target.value)} disabled={!isEditing}>
                   <option value="무관">무관</option>
-                  <option value="오전 (6-12)">오전 (6-12)</option>
-                  <option value="오후 (12-18)">오후 (12-18)</option>
-                  <option value="저녁 (18-0)">저녁 (18-0)</option>
-                  <option value="새벽 (0-6)">새벽 (0-6)</option>
-                  <option value="풀타임 (8시간 이상)">풀타임 (8시간 이상)</option>
+                  <option value="오전">오전 (6-12)</option>
+                  <option value="오후">오후 (12-18)</option>
+                  <option value="저녁">저녁 (18-0)</option>
+                  <option value="새벽">새벽 (0-6)</option>
+                  <option value="풀타임">풀타임 (8시간 이상)</option>
                 </HalfSelect>
               </Wrap>
             </Wrap>
 
-            {day === "요일 선택" && (
+            {day === "요일" && (
               <DaySelectContainer>
                 {days.map((dayOption) => {
-                  const isSelected = selectedDays.includes(dayOption);
+                  const isSelected = selectedDays.some((d) => d.day === dayOption);
                   return (
                     <DayButton key={dayOption} onClick={() => isEditing && toggleDay(dayOption)} selected={isSelected} disabled={!isEditing}>
                       {dayOption}

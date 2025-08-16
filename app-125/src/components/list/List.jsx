@@ -142,13 +142,7 @@ function List({ type, data }) {
 
   // 생성
   const goToCreate = () => {
-    const isLoggedIn = !!localStorage.getItem("token"); // 토큰이 있는지 확인 예시
-    if (isLoggedIn) {
-      navigate(`/resumes/create`);
-    } else {
-      alert("로그인 후 이용 가능합니다.");
-      navigate(`/login`); // 로그인 페이지로 이동
-    }
+    navigate(`/resumes/create`);
   };
 
   return (

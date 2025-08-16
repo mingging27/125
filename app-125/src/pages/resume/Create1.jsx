@@ -224,6 +224,16 @@ function Create1({
         return;
       }
 
+      // 휴대폰 번호 형식 체크
+      if (tel.length !== 11 || !/^\d{11}$/.test(tel)) {
+        alert("휴대폰 번호를 11자리 숫자로 입력해주세요.");
+        return;
+      }
+
+      // 11자리면 하이픈 추가
+      const formattedPhone = tel.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+      setTel(formattedPhone);
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const fullEmail = `${email1}@${email2}`;
       if (!emailRegex.test(fullEmail)) {
@@ -255,7 +265,7 @@ function Create1({
 
         <Box>
           <Subtitle>회원 정보</Subtitle>
-          <Description>ㅇㅇㅇ님의 정보가 맞는지 확인해주세요.</Description>
+          <Description>{name}님의 정보가 맞는지 확인해주세요.</Description>
 
           <Wrap>
             <InputDiv>
@@ -294,6 +304,7 @@ function Create1({
                 <HalfSelect value={email2} disabled={!isEditing} onChange={(e) => setEmail2(e.target.value)}>
                   <option value="gmail.com">gmail.com</option>
                   <option value="naver.com">naver.com</option>
+                  <option value="daum.net">daum.net</option>
                 </HalfSelect>
               </Wrap>
             </InputDiv>

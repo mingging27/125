@@ -246,14 +246,20 @@ function Create4({
       alert("자격증명과 취득년도를 모두 입력해주세요.");
       return;
     }
-    const text = `${certificateName.trim()} (${certificateYear.trim()})`;
+
+    const newCert = {
+      certificate_name: certificateName.trim(),
+      acquisition_year: certificateYear.trim(),
+    };
+
     if (editingSection === "certificate" && editingIndex !== null) {
-      const updated = [...certificates];
-      updated[editingIndex] = text;
-      setCertificates(updated);
+      // 수정 중이면 해당 인덱스만 교체
+      setCertificates((prev) => prev.map((item, i) => (i === editingIndex ? newCert : item)));
     } else {
-      setCertificates([...certificates, text]);
+      // 새 항목 추가
+      setCertificates((prev) => [...prev, newCert]);
     }
+
     setCertificateName("");
     setCertificateYear("");
     setEditingIndex(null);
@@ -261,11 +267,9 @@ function Create4({
   };
 
   const handleEditCertificate = (index) => {
-    const match = certificates[index].match(/^(.*) \((.*)\)$/);
-    if (!match) return;
-    const [, name, year] = match;
-    setCertificateName(name);
-    setCertificateYear(year);
+    const item = certificates[index];
+    setCertificateName(item.certificate_name);
+    setCertificateYear(item.acquisition_year);
     setEditingIndex(index);
     setEditingSection("certificate");
   };
@@ -290,13 +294,19 @@ function Create4({
       alert("공인시험, 점수/등급, 취득년도를 모두 입력해주세요.");
       return;
     }
-    const text = `${languageTest.trim()} (${languageScore.trim()}, ${languageYear.trim()})`;
+
+    const newLang = {
+      test_name: languageTest.trim(),
+      score: languageScore.trim(),
+      acquisition_year: languageYear.trim(),
+    };
+
     if (editingSection === "language" && editingIndex !== null) {
       const updated = [...languages];
-      updated[editingIndex] = text;
+      updated[editingIndex] = newLang;
       setLanguages(updated);
     } else {
-      setLanguages([...languages, text]);
+      setLanguages([...languages, newLang]);
     }
     setLanguageTest("");
     setLanguageScore("");
@@ -306,12 +316,10 @@ function Create4({
   };
 
   const handleEditLanguage = (index) => {
-    const match = languages[index].match(/^(.*) \((.*), (.*)\)$/);
-    if (!match) return;
-    const [, test, score, year] = match;
-    setLanguageTest(test);
-    setLanguageScore(score);
-    setLanguageYear(year);
+    const item = languages[index];
+    setLanguageTest(item.test_name);
+    setLanguageScore(item.score);
+    setLanguageYear(item.acquisition_year);
     setEditingIndex(index);
     setEditingSection("language");
   };
@@ -348,22 +356,19 @@ function Create4({
           <Description>자격증이 있나요?</Description>
           <Wrap>
             <InputDiv>
-              <HalfSelect value={certificateStatus} onChange={(e) => setCertificateStatus(e.target.value)}>
-                <option value="" disabled hidden>
-                  선택
-                </option>
-                <option value="yes">있음</option>
-                <option value="no">없음</option>
+              <HalfSelect value={certificateStatus} onChange={(e) => setCertificateStatus(e.target.value === "true")}>
+                <option value={false}>없음</option>
+                <option value={true}>있음</option>
               </HalfSelect>
             </InputDiv>
           </Wrap>
         </Box>
 
-        {certificateStatus === "yes" && (
+        {certificateStatus && (
           <DetailBox>
             {certificates.map((item, index) => (
               <CertificateDetail key={index}>
-                {item}
+                {`${item.certificate_name} (${item.acquisition_year})`}
                 <Edit type="button" onClick={() => handleEditCertificate(index)}>
                   수정
                 </Edit>
@@ -403,22 +408,19 @@ function Create4({
           <Description>공인 어학성적이 있나요?</Description>
           <Wrap>
             <InputDiv>
-              <HalfSelect value={languageStatus} onChange={(e) => setLanguageStatus(e.target.value)}>
-                <option value="" disabled hidden>
-                  선택
-                </option>
-                <option value="yes">있음</option>
-                <option value="no">없음</option>
+              <HalfSelect value={languageStatus} onChange={(e) => setLanguageStatus(e.target.value === "true")}>
+                <option value={false}>없음</option>
+                <option value={true}>있음</option>
               </HalfSelect>
             </InputDiv>
           </Wrap>
         </Box>
 
-        {languageStatus === "yes" && (
+        {languageStatus && (
           <DetailBox>
             {languages.map((item, index) => (
               <LanguageDetail key={index}>
-                {item}
+                {`${item.test_name} (${item.score}, ${item.acquisition_year})`}
                 <Edit type="button" onClick={() => handleEditLanguage(index)}>
                   수정
                 </Edit>

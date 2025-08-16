@@ -59,20 +59,22 @@ function ResumeForm() {
   const [school, setSchool] = useState("");
   const [status, setStatus] = useState("");
   const [careerStatus, setCareerStatus] = useState("");
-  const [careers, setCareers] = useState([]);
+  const [career, setCareer] = useState("");
+  const [careersPeriod, setCareersPeriod] = useState("");
 
   // Create3 상태
-  const [regionList, setRegionList] = useState([]);
-  const [occupationList, setOccupationList] = useState([]);
+  const [region, setRegion] = useState("");
+  const [occupation, setOccupation] = useState("");
   const [isEditing2, setIsEditing2] = useState(false);
   const [period, setPeriod] = useState("무관");
   const [day, setDay] = useState("무관");
   const [time, setTime] = useState("무관");
+  const [selectedDays, setSelectedDays] = useState([]);
 
   // Create4 상태
-  const [certificateStatus, setCertificateStatus] = useState("");
+  const [certificateStatus, setCertificateStatus] = useState(false);
   const [certificates, setCertificates] = useState([]);
-  const [languageStatus, setLanguageStatus] = useState("");
+  const [languageStatus, setLanguageStatus] = useState(false);
   const [languages, setLanguages] = useState([]);
 
   // Create5 상태
@@ -81,42 +83,72 @@ function ResumeForm() {
   const goNextStep = () => setStep((prev) => prev + 1);
   const goPrevStep = () => setStep((prev) => prev - 1);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selfIntro.trim() === "") {
       alert("자기소개는 필수 입력 항목입니다.");
       return;
     }
 
+    const token = localStorage.getItem("token");
+
     const resumeData = {
-      title,
-      name,
-      age,
-      gender,
-      address,
-      tel,
-      email: `${email1}@${email2}`,
+      resume_title: title,
       school,
-      status,
-      careerStatus,
-      careers,
-      regionList,
-      occupationList,
-      period,
-      day,
-      time,
-      certificateStatus,
-      certificates,
-      languageStatus,
-      languages,
-      selfIntro,
+      enrollment_status: status,
+      career_type: careerStatus,
+      company_name: career,
+      work_period_text: careersPeriod,
+      desired_location: region,
+      desired_job_category: occupation,
+      desired_work_duration: period,
+      preferred_day_type: day,
+      preferred_time: time,
+      has_certificate: certificateStatus,
+      has_language_score: languageStatus,
+      self_introduction: selfIntro,
+      certificates: certificates.map((c) => {
+        const year = Number(c.acquisition_year);
+        return {
+          certificate_name: c.certificate_name || "",
+          acquisition_year: year >= 1901 && year <= 2155 ? year : null,
+        };
+      }),
+      languageScores: languages.map((l) => ({
+        test_name: l.test_name,
+        score: l.score,
+        acquisition_year: Number(l.acquisition_year),
+      })),
+      preferredDays: selectedDays.map((d) => ({ day: d.day })),
+      memberInfo: {
+        username: name,
+        age,
+        phone_number: tel,
+        gender,
+        address,
+      },
     };
 
-    console.log("최종 제출할 이력서 데이터:", resumeData);
+    try {
+      const res = await fetch("http://127.0.0.1:3002/api/resumes/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(resumeData),
+      });
 
-    // API 연동은 여기서 fetch나 axios 사용
-    // 예: axios.post('/api/resume', resumeData)
+      if (!res.ok) throw new Error("이력서 등록 실패");
 
-    alert("이력서가 제출되었습니다!");
+      const data = await res.json();
+      console.log(resumeData);
+      console.log("이력서 등록 성공:", data);
+      alert("이력서가 등록되었습니다!");
+    } catch (err) {
+      console.log(certificates);
+      console.error(err);
+      alert("이력서 등록 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -158,8 +190,10 @@ function ResumeForm() {
             setStatus={setStatus}
             careerStatus={careerStatus}
             setCareerStatus={setCareerStatus}
-            careers={careers} // ✅ 추가
-            setCareers={setCareers} // ✅ 추가
+            career={career}
+            setCareer={setCareer}
+            careersPeriod={careersPeriod}
+            setCareersPeriod={setCareersPeriod}
             onNext={goNextStep}
             goPrev={goPrevStep}
           />
@@ -169,10 +203,10 @@ function ResumeForm() {
       {step === 3 && (
         <>
           <Create3
-            regionList={regionList}
-            setRegionList={setRegionList}
-            occupationList={occupationList}
-            setOccupationList={setOccupationList}
+            region={region}
+            setRegion={setRegion}
+            occupation={occupation}
+            setOccupation={setOccupation}
             isEditing={isEditing2}
             setIsEditing={setIsEditing2}
             period={period}
@@ -183,6 +217,8 @@ function ResumeForm() {
             setTime={setTime}
             onNext={goNextStep}
             goPrev={goPrevStep}
+            selectedDays={selectedDays}
+            setSelectedDays={setSelectedDays}
           />
         </>
       )}

@@ -137,6 +137,12 @@ const Button = styled.button`
   }
 `;
 
+const Wrap = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+`;
+
 function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -146,12 +152,22 @@ function Signup() {
   const [gender, setGender] = useState(""); // male / female
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [email1, setEmail1] = useState("");
+  const [email2, setEmail2] = useState("");
   const navigate = useNavigate();
 
   // api 연동
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 휴대폰 번호 형식 체크
+    if (phone.length !== 11 || !/^\d{11}$/.test(phone)) {
+      alert("휴대폰 번호를 11자리 숫자로 입력해주세요.");
+      return;
+    }
+
+    // 11자리면 하이픈 추가
+    const formattedPhone = phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
 
     if (
       !username.trim() ||
@@ -161,8 +177,9 @@ function Signup() {
       !birthdate.trim() ||
       !gender.trim() ||
       !address.trim() ||
-      !phone.trim() ||
-      !email.trim()
+      !formattedPhone.trim() ||
+      !email1.trim() ||
+      !email2.trim()
     ) {
       alert("필수 입력 항목을 모두 작성해 주세요.");
       return;
@@ -178,9 +195,9 @@ function Signup() {
           login_id: username,
           password: password,
           confirmPassword: confirmPassword,
-          email: email,
+          email: `${email1}@${email2}`,
           username: name,
-          phone_number: phone,
+          phone_number: formattedPhone, // 변환된 번호 전송
           gender: gender,
           birthdate: birthdate,
           address: address,
@@ -261,13 +278,24 @@ function Signup() {
                 <Label2>
                   휴대폰<Essential color="red">*</Essential>
                 </Label2>
-                <Input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <Input type="text" placeholder={"ex) 01011112222"} onChange={(e) => setPhone(e.target.value)} />
               </InputDiv3>
               <InputDiv3>
                 <Label3>
                   이메일<Essential color="red">*</Essential>
                 </Label3>
-                <Input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <Wrap>
+                  <HalfInput onChange={(e) => setEmail1(e.target.value)} />
+                  <span>@</span>
+                  <HalfSelect onChange={(e) => setEmail2(e.target.value)}>
+                    <option value="" disabled hidden>
+                      선택
+                    </option>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="daum.net">daum.net</option>
+                  </HalfSelect>
+                </Wrap>
               </InputDiv3>
             </InputDiv2>
             <InputDiv3>

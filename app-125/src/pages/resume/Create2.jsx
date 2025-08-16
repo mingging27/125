@@ -88,7 +88,7 @@ const Input = styled.input`
 
 const DetailInput = styled(Input)`
   background-color: #fff0;
-  width: 1055px;
+  width: 1000px;
 `;
 
 const Select = styled.select`
@@ -166,9 +166,6 @@ const Add = styled.button`
   justify-content: center;
   align-items: center;
 
-  position: absolute;
-  right: 100px;
-
   /*폰트*/
   font-size: 18px;
   font-weight: bold;
@@ -211,38 +208,42 @@ const Btn = styled.button`
   }
 `;
 
-function Create2({ school, setSchool, status, setStatus, careerStatus, setCareerStatus, careers, setCareers, onNext, goPrev }) {
+function Create2({ school, setSchool, status, setStatus, careerStatus, setCareerStatus, career, setCareer, careersPeriod, setCareersPeriod, onNext, goPrev }) {
   const [careerInput, setCareerInput] = useState("");
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [editing, setEditing] = useState(false);
+
+  // 회사명과 기간 분리 함수
+  const parseCareerInput = (input) => {
+    const match = input.match(/^(.*)\s*\((.*)\)$/);
+    if (!match) return { company: input, period: "" };
+    const company = match[1].trim();
+    const period = match[2].trim();
+    return { company, period };
+  };
 
   const handleAddCareer = () => {
-    if (careerInput.trim() === "") return;
+    if (!careerInput.trim()) return;
 
-    if (editingIndex !== null) {
-      const updated = [...careers];
-      updated[editingIndex] = careerInput;
-      setCareers(updated);
-      setEditingIndex(null);
-    } else {
-      setCareers([...careers, careerInput]);
-    }
+    const { company, period } = parseCareerInput(careerInput);
+
+    setCareer(company);
+    setCareersPeriod(period);
     setCareerInput("");
+    setEditing(false);
+
+    console.log(company, period);
   };
 
-  const handleEditCareer = (index) => {
-    setCareerInput(careers[index]);
-    setEditingIndex(index);
+  const handleEditCareer = () => {
+    setCareerInput(`${career} (${careersPeriod})`);
+    setEditing(true);
   };
 
-  const handleDeleteCareer = (index) => {
-    const updated = careers.filter((_, i) => i !== index);
-    setCareers(updated);
-    if (editingIndex === index) {
-      setCareerInput("");
-      setEditingIndex(null);
-    } else if (editingIndex > index) {
-      setEditingIndex(editingIndex - 1);
-    }
+  const handleDeleteCareer = () => {
+    setCareer("");
+    setCareersPeriod("");
+    setCareerInput("");
+    setEditing(false);
   };
 
   const handleNext = () => {
@@ -258,13 +259,11 @@ function Create2({ school, setSchool, status, setStatus, careerStatus, setCareer
       alert("경력 사항을 선택해주세요.");
       return;
     }
-    if (careerStatus === "experienced" && careers.length === 0) {
+    if (careerStatus === "경력" && !career) {
       alert("경력 사항을 입력해주세요.");
       return;
     }
-    if (typeof onNext === "function") {
-      onNext();
-    }
+    onNext?.();
   };
 
   return (
@@ -285,21 +284,20 @@ function Create2({ school, setSchool, status, setStatus, careerStatus, setCareer
                 <option value="" disabled hidden>
                   학교
                 </option>
-                <option value="elementary">초등학교</option>
-                <option value="middle">중학교</option>
-                <option value="high">고등학교</option>
-                <option value="college-2yr">대학교 (2, 3년제)</option>
-                <option value="college-4yr">대학교 (4년제)</option>
-                <option value="graduate">대학원</option>
+                <option value="초등학교">초등학교</option>
+                <option value="중학교">중학교</option>
+                <option value="고등학교">고등학교</option>
+                <option value="대학교(2, 3년제)">대학교 (2, 3년제)</option>
+                <option value="대학교(4년제)">대학교 (4년제)</option>
+                <option value="대학원">대학원</option>
               </Select>
-
               <HalfSelect value={status} onChange={(e) => setStatus(e.target.value)}>
                 <option value="" disabled hidden>
                   상태
                 </option>
-                <option value="enrolled">재학</option>
-                <option value="leave">휴학</option>
-                <option value="graduated">졸업</option>
+                <option value="재학">재학</option>
+                <option value="휴학">휴학</option>
+                <option value="졸업">졸업</option>
               </HalfSelect>
             </InputDiv>
           </Wrap>
@@ -317,44 +315,57 @@ function Create2({ school, setSchool, status, setStatus, careerStatus, setCareer
                 <option value="" disabled hidden>
                   선택
                 </option>
-                <option value="new">신입</option>
-                <option value="experienced">경력</option>
+                <option value="신입">신입</option>
+                <option value="경력">경력</option>
               </HalfSelect>
             </InputDiv>
           </Wrap>
         </Box>
 
-        {/* 경력 상세 입력 (experienced일 때만) */}
-        {careerStatus === "experienced" && (
+        {/* 경력 상세 입력 (경력일 때만) */}
+        {careerStatus === "경력" && (
           <DetailBox>
-            {careers.map((career, index) => (
-              <CareerDetail key={index}>
-                {career}
-                <Edit type="button" onClick={() => handleEditCareer(index)}>
+            {career && (
+              <CareerDetail>
+                {career} ({careersPeriod})
+                <Edit
+                  type="button"
+                  onClick={handleEditCareer}
+                  disabled={editing} // 이미 편집 중이면 수정 버튼 비활성화
+                >
                   수정
                 </Edit>
-                <Delete type="button" onClick={() => handleDeleteCareer(index)}>
+                <Delete
+                  type="button"
+                  onClick={handleDeleteCareer}
+                  disabled={editing} // 이미 편집 중이면 삭제 버튼 비활성화
+                >
                   삭제
                 </Delete>
               </CareerDetail>
-            ))}
-
-            {careers.length > 0 && <Line />}
-
+            )}
             <Description>경력 사항(회사명, 재직 기간)을 입력해주세요. [예: ㅇㅇ기업 (2023.02-2025.05)]</Description>
-
             <Wrap>
-              <DetailInput type="text" value={careerInput} onChange={(e) => setCareerInput(e.target.value)} placeholder="회사명 (YYYY.MM ~ YYYY.MM)" />
-              <Add type="button" onClick={handleAddCareer}>
-                {editingIndex !== null ? "완료" : "추가"}
+              <DetailInput
+                type="text"
+                value={careerInput}
+                onChange={(e) => setCareerInput(e.target.value)}
+                placeholder="회사명 (YYYY.MM ~ YYYY.MM)"
+                disabled={!!career && !editing} // 이미 값이 있고 편집 중이 아니면 입력 불가
+              />
+              <Add
+                type="button"
+                onClick={handleAddCareer}
+                disabled={!!career && !editing} // 이미 값이 있고 편집 중이 아니면 버튼 클릭 불가
+              >
+                {editing ? "완료" : "추가"}
               </Add>
             </Wrap>
           </DetailBox>
         )}
+
         <BtnDiv>
-          {/* 이전 */}
           <Btn onClick={goPrev}>← 이전</Btn>
-          {/* 다음 버튼 */}
           <Btn onClick={handleNext}>다음 →</Btn>
         </BtnDiv>
       </PositionWrap>
