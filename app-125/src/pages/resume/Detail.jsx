@@ -300,6 +300,7 @@ function Detail() {
   const [resumeData, setResumeData] = useState(null);
   const [feedbackData, setFeedbackData] = useState(null);
   const [error, setError] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -310,7 +311,20 @@ function Detail() {
 
     const fetchData = async () => {
       try {
-        // 1) 이력서 데이터
+        // 1) 회원정보
+        const userRes = await fetch("http://127.0.0.1:3002/api/user/info-for-resume", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!userRes.ok) {
+          setError("회원 정보를 불러오는데 실패했습니다.");
+          return;
+        }
+
+        const userJson = await userRes.json();
+        setUserInfo(userJson);
+
+        // 2) 이력서 데이터
         const resumeRes = await fetch(`http://127.0.0.1:3002/api/resumes/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -327,7 +341,7 @@ function Detail() {
         const resumeJson = await resumeRes.json();
         setResumeData(resumeJson.resume);
 
-        // 2) AI 피드백
+        // 3) AI 피드백
         const feedbackRes = await fetch(`http://127.0.0.1:3002/api/aiFeedback`, {
           method: "POST",
           headers: {
@@ -394,9 +408,9 @@ function Detail() {
       left = Math.random() * (BOX_WIDTH - width);
       top = Math.random() * (BOX_HEIGHT - height);
       tries++;
-    } while (doesOverlap(left, top, width, height) && tries < 100);
+    } while (doesOverlap(left, top, width, height) && tries < 30);
 
-    if (tries < 100) {
+    if (tries < 30) {
       placed.push({ left, top, width, height });
       placedKeywords.push({ word, left, top, fontSize });
     } else {
@@ -415,25 +429,25 @@ function Detail() {
             <Wrap>
               <Wrap>
                 <Label>이름</Label>
-                <Text2>ㅇㅇㅇ</Text2>
+                <Text2>{userInfo?.name || ""}</Text2>
               </Wrap>
               <Wrap>
                 <Label2>나이 ∙ 성별</Label2>
-                <Text>22 ∙ 여</Text>
+                <Text>{userInfo ? `${userInfo.age} ∙ ${userInfo.gender === "female" ? "여" : "남"}` : ""}</Text>
               </Wrap>
             </Wrap>
             <Wrap>
               <Label>주소</Label>
-              <Text2>서울특별시 도봉구 도봉동</Text2>
+              <Text2>{userInfo?.address || ""}</Text2>
             </Wrap>
             <Wrap>
               <Wrap>
                 <Label>휴대폰</Label>
-                <Text2>010-0000-0000</Text2>
+                <Text2>{userInfo?.phone || ""}</Text2>
               </Wrap>
               <Wrap>
                 <Label>이메일</Label>
-                <Text>duksung@gmail.com</Text>
+                <Text>{userInfo?.email || ""}</Text>
               </Wrap>
             </Wrap>
           </ListContentTop>
