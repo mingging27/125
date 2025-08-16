@@ -3,11 +3,12 @@ import Question from "../../components/interview/Question";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import Header from "../../components/Header";
 
 const Content = styled.div`
   height: 3800px;
-  padding-top: 160px;
-  background-color: #fdfcfa;
+  padding-top: 170px;
+  background-color: #fdfcfc;
 
   display: flex;
   flex-direction: column;
@@ -20,13 +21,13 @@ const Title = styled.h2`
   color: #000000;
   font-weight: bold;
   font-size: 24px;
-  margin-bottom: 61px;
+  margin-bottom: 30px;
 `;
 
 const ListContentMiddle = styled.div`
-  width: 1250px;
+  width: 1157px;
   border-bottom: 1px solid #a8a8a8;
-  padding: 30px 30px;
+  padding: 20px 30px;
 `;
 
 const ListContentTop = styled(ListContentMiddle)`
@@ -38,9 +39,9 @@ const ListContentBottom = styled(ListContentMiddle)`
 `;
 
 const Subtitle = styled.h3`
-  font-size: 24px;
+  font-size: 21px;
   margin: 0;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `;
 
 const Wrap = styled.div`
@@ -50,6 +51,7 @@ const Wrap = styled.div`
 `;
 
 const BlockWrap = styled.div`
+  padding-left: 60px;
   display: flex;
   justify-content: space-between;
 `;
@@ -122,7 +124,7 @@ const BoxWrap = styled.div`
 `;
 
 const Weakness = styled.div`
-  width: 622px;
+  width: 560px;
   height: 250px;
   position: relative;
   border-radius: 50px;
@@ -142,14 +144,15 @@ const Strength = styled(Weakness)`
 `;
 
 const KeywordBox = styled(Weakness)`
-  width: 1298px;
+  width: 1177px;
   min-height: 400px;
   margin-top: 30px;
 `;
 
 const KeywordWrap = styled.div`
   position: relative;
-  width: 100%;
+  margin-left: 10px;
+  width: 90%;
   height: 260px;
   margin-top: 150px;
 `;
@@ -162,7 +165,7 @@ const Keyword = styled.div`
 `;
 
 const Activity = styled(Weakness)`
-  width: 1298px;
+  width: 1177px;
   min-height: 400px;
 `;
 
@@ -173,15 +176,15 @@ const BoxTitleDiv = styled.div`
 `;
 
 const Line = styled.div`
-  width: 538px;
+  width: 500px;
   border-bottom: 1px solid #000;
   position: absolute;
-  top: 158px;
+  top: 120px;
 `;
 
 const Line2 = styled(Line)`
-  width: 1227px;
-  top: 138px;
+  width: 1100px;
+  top: 120px;
 `;
 
 const PositionWrap = styled.div``;
@@ -192,14 +195,17 @@ const BoxTitle = styled.h3`
 `;
 
 const BoxDescription = styled.p`
+  margin: 0;
+  margin-top: 5px;
   font-size: 18px;
   color: #777e90;
 `;
 
 const BoxList = styled.ul`
+  width: 500px;
   padding: 0;
-  padding-left: 20px;
-  margin-top: 180px;
+  padding-left: 30px;
+  margin-top: 135px;
 `;
 
 const BoxList2 = styled(BoxList)`
@@ -272,7 +278,7 @@ const BtnDiv = styled.div`
 
 const BtnDiv2 = styled(BtnDiv)`
   margin-top: 60px;
-  width: 1300px;
+  width: 1150px;
 `;
 
 //QnA
@@ -400,7 +406,7 @@ function Detail() {
   const MIN_FONT = 16;
 
   // 박스 크기 (KeywordWrap에 맞춤)
-  const BOX_WIDTH = 800;
+  const BOX_WIDTH = 1000;
   const BOX_HEIGHT = 200;
 
   function getFontSize(importance) {
@@ -446,6 +452,7 @@ function Detail() {
 
   return (
     <>
+      <Header />
       <Content>
         <List>
           <Title>{resumeData.resume_title}</Title>
@@ -478,13 +485,13 @@ function Detail() {
           </ListContentTop>
           <ListContentMiddle>
             <Subtitle>학력 정보</Subtitle>
-            <BoldText>{resumeData.enrollment_status}</BoldText>
+            <Text2>{resumeData.enrollment_status}</Text2>
           </ListContentMiddle>
           <ListContentMiddle>
             <Subtitle>자격증</Subtitle>
             {resumeData.certificates.map((cert, idx) => (
               <Wrap key={idx}>
-                <Label2>{cert.acquisition_year}</Label2>
+                <Label3>{cert.acquisition_year}</Label3>
                 <Text>{cert.certificate_name}</Text>
               </Wrap>
             ))}

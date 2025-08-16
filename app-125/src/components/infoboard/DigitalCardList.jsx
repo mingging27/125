@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
-
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -16,8 +15,8 @@ const Card = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  cursor: pointer; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
 `;
 
 const ImageBox = styled.div`
@@ -45,7 +44,7 @@ const Period = styled.p`
 `;
 
 const ApplyButton = styled.button`
-  background-color: #2D66D0;
+  background-color: #2d66d0;
   color: white;
   font-size: 14px;
   font-weight: 600;
@@ -65,35 +64,28 @@ function DigitalCardList() {
   useEffect(() => {
     axios
       .get("http://127.0.0.1:3002/api/infoPosts") // category 없이 전체 요청
-      .then(res => {
+      .then((res) => {
         console.log("받은 데이터:", res.data);
         setPosts(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("에러:", err);
       });
-
   }, []);
 
   return (
     <Grid>
       {posts.map((program) => (
-      <Card key={program.info_post_id}>
-        <ImageBox />
-        <Content>
-          <Title>{program.title}</Title>
-          <Period>{new Date(program.published_at).toLocaleDateString()}</Period>
-          <a
-            href={program.source_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: "none" }}
-          >
-            <ApplyButton>바로가기</ApplyButton>
-          </a>
-        </Content>
-      </Card>
-
+        <Card key={program.info_post_id}>
+          <ImageBox />
+          <Content>
+            <Title>{program.title}</Title>
+            <Period>{new Date(program.published_at).toLocaleDateString()}</Period>
+            <a href={program.source_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+              <ApplyButton>바로가기</ApplyButton>
+            </a>
+          </Content>
+        </Card>
       ))}
     </Grid>
   );

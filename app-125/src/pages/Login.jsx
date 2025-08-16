@@ -5,8 +5,8 @@ import Header from "../components/Header";
 
 const Content = styled.div`
   height: 1000px;
-  padding-top: 200px;
-  background-color: #fdfcfa;
+  padding-top: 250px;
+  background-color: #fdfcfc;
 
   display: flex;
   justify-content: center;
@@ -15,7 +15,7 @@ const Content = styled.div`
 const PositionWrap = styled.div``;
 
 const FormDiv = styled.div`
-  width: 730px;
+  width: 932px;
   height: 304px;
   background-color: white;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -30,20 +30,21 @@ const Form = styled.form`
 `;
 
 const Title = styled.h2`
-  color: #5ec27d;
+  color: #000000;
   font-weight: bold;
-  font-size: 30px;
-  margin-bottom: 57px;
+  font-size: 24px;
+  margin-bottom: 30px;
 `;
 
 const InputDiv = styled.div`
   display: flex;
   margin-bottom: 15px;
+  margin-left: 30px;
 `;
 
 const Label = styled.p`
   width: 140px;
-  color: #b1b5c3;
+  color: #53545aff;
   font-size: 18px;
 `;
 
@@ -81,7 +82,22 @@ const Submit = styled.button`
   font-weight: bold;
 `;
 
-const Signup = styled.p``;
+const Subtitle = styled.p`
+  font-size: 18px;
+`;
+
+const SignupDiv = styled.div`
+  border-left: 1px solid #5ec27d;
+  margin: 20px 0 20px 0;
+  padding: 50px 22px 50px 92px;
+`;
+
+const Signup = styled.p`
+  color: #8d9097ff;
+`;
+const Find = styled(Signup)`
+  margin-top: 40px;
+`;
 
 function Login() {
   const [loginId, setLoginId] = useState("");
@@ -149,9 +165,12 @@ function Login() {
               </InputDiv>
               <Submit type="submit">로그인</Submit>
             </Form>
-            <Signup onClick={() => navigate("/signup")} style={{ cursor: "pointer" }}>
-              회원가입
-            </Signup>
+            <SignupDiv>
+              <Signup onClick={() => navigate("/signup")} style={{ cursor: "pointer" }}>
+                회원가입
+              </Signup>
+              <Find style={{ cursor: "pointer" }}>비밀번호 찾기</Find>
+            </SignupDiv>
           </FormDiv>
         </PositionWrap>
       </Content>

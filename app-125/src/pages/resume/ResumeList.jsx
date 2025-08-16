@@ -5,8 +5,8 @@ import Header from "../../components/Header";
 
 const Content = styled.div`
   height: 900px;
-  padding-top: 164px;
-  background-color: #fdfcfa;
+  padding-top: 170px;
+  background-color: #fdfcfc;
 
   display: flex;
   justify-content: center;

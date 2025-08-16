@@ -3,6 +3,7 @@ import ListContent from "./ListContent";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination"; // ✅ MUI에서 가져오기
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 /*
     실행 전 패키지 설치해주세요!
@@ -13,29 +14,30 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
     <List type={"이력서"} data={리스트 형태의 데이터}/>
 */
 
-const PositionWrap = styled.div``;
+const PositionWrap = styled.div`
+  width: 1177px;
+  position: relative;
+`;
 
 const ListTitle = styled.h2`
   color: black;
   font-weight: bold;
   font-size: 24px;
-  margin-left: 10px;
-  margin-bottom: 30px;
 `;
 
 const ListWrap = styled.div`
-  width: 1100px;
+  width: 1177px;
   display: column;
   justify-content: center;
 `;
 
 const Content = styled.div`
-  margin-top: 18px;
+  margin-top: 30px;
 `;
 
 const SubTitle = styled.div`
-  width: 1100px;
-  height: 50px;
+  width: 1177px;
+  height: 60px;
   background-color: #f9fbfc;
   border: 1px solid #d0d0ce;
   border-bottom: none;
@@ -71,6 +73,29 @@ const PaginationWrap = styled.div`
   margin: 30px 0;
 `;
 
+const Button = styled.button`
+  /*버튼 디자인*/
+  width: 50px;
+  height: 40px;
+  border: none;
+  background-color: #5ec27d;
+  border-radius: 30px;
+  box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+
+  position: absolute;
+  top: 23px;
+  right: 5px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /*폰트*/
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+`;
+
 const theme = createTheme({
   components: {
     MuiPaginationItem: {
@@ -91,6 +116,7 @@ const theme = createTheme({
 
 function List({ type, data }) {
   const [stockList, setStockList] = useState(data);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setStockList(data);
@@ -109,10 +135,16 @@ function List({ type, data }) {
     setCurrentPage(value);
   };
 
+  // 수정
+  const goToCreate = () => {
+    navigate(`/resumes/create`); // 추가 라우트로 이동
+  };
+
   return (
     <>
       <PositionWrap>
         <ListTitle>{type}</ListTitle>
+        <Button onClick={goToCreate}>+</Button>
         <ListWrap>
           <Content>
             <SubTitle>

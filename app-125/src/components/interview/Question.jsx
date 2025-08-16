@@ -16,7 +16,7 @@ const Content = styled.div`
 `;
 
 const Qdiv = styled.div`
-  width: 1280px;
+  width: 1177px;
   border: none;
   background-color: white;
   border-radius: 20px;
@@ -29,7 +29,7 @@ const Qdiv = styled.div`
 `;
 
 const Qtext = styled.p`
-  width: 1000px;
+  width: 950px;
 
   /*폰트*/
   color: black;

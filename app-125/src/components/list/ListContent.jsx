@@ -14,7 +14,7 @@ import deleteBtn from "../../img/list/delete.png";
 */
 
 const Content = styled.div`
-  width: 1100px;
+  width: 1177px;
   height: 60px;
   background-color: white;
   border: 1px solid #d0d0ce;
