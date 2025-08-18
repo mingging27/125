@@ -5,9 +5,11 @@ import Create3 from "./Create3";
 import Create4 from "./Create4";
 import Create5 from "./Create5";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 
 function ResumeForm() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
   // Create1 상태
@@ -141,11 +143,10 @@ function ResumeForm() {
       if (!res.ok) throw new Error("이력서 등록 실패");
 
       const data = await res.json();
-      console.log(resumeData);
-      console.log("이력서 등록 성공:", data);
+      console.log("이력서 등록 성공:");
       alert("이력서가 등록되었습니다!");
+      navigate(`/resumes`); // 이력서 목록 페이지로 이동
     } catch (err) {
-      console.log(certificates);
       console.error(err);
       alert("이력서 등록 중 오류가 발생했습니다.");
     }

@@ -5,9 +5,11 @@ import Create2 from "./Create2";
 import Create3 from "./Create3";
 import Create4 from "./Create4";
 import Create5 from "./Create5";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 
 function Edit() {
+  const navigate = useNavigate();
   const { id } = useParams(); // URL에서 id 가져오기
   const [step, setStep] = useState(1);
 
@@ -174,8 +176,8 @@ function Edit() {
       });
 
       if (!res.ok) throw new Error("수정 실패");
-
       alert("이력서가 수정되었습니다.");
+      navigate(`/resumes`); // 이력서 목록 페이지로 이동
     } catch (err) {
       console.error("이력서 수정 중 오류:", err);
       alert("수정 중 오류가 발생했습니다.");

@@ -153,7 +153,7 @@ function Signup() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [email1, setEmail1] = useState("");
-  const [email2, setEmail2] = useState("");
+  const [email2, setEmail2] = useState("gmail.com");
   const navigate = useNavigate();
 
   // api 연동

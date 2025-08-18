@@ -310,7 +310,7 @@ function Create1({
             </InputDiv>
           </Wrap>
 
-          <Edit onClick={handleEditToggle}>{isEditing ? "완료" : "편집"}</Edit>
+          <Edit onClick={handleEditToggle}>{isEditing ? "완료" : "수정"}</Edit>
         </Box>
         <BtnDiv>
           {/* 다음으로 가는 버튼 */}
