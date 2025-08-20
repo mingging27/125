@@ -156,7 +156,7 @@ function MainPage() {
               <CardImage src={JobResearchImg} alt="구인/구직 게시판" />
               <CardText>구인/구직 게시판</CardText>
             </Card>
-            <Card onClick={() => navigate("/resume")}>
+            <Card onClick={() => navigate("/resumes")}>
               <CardImage src={AIRetouchingImg} alt="AI 이력서 리터칭" />
               <CardText>AI 이력서 리터칭</CardText>
             </Card>
