@@ -43,12 +43,13 @@ app.use("/", express.static(path.join(__dirname, "public")));
 app.use(cors()); // 임시로 전체 허용
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(process.env.COOKIE_SECRET || 'default_secret'));
+
 app.use(
   session({
     resave: false,
     saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
+    secret: process.env.COOKIE_SECRET || 'default_secret',
     cookie: {
       httpOnly: true,
       secure: false,
