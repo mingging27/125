@@ -38,7 +38,7 @@ const TitleGroup = styled.div`
   flex-direction: column;
 `;
 
-const ThumbnailWrapper = styled.div`  
+const ThumbnailWrapper = styled.div`
   position: relative;
   margin-bottom: 24px;
 `;
@@ -119,7 +119,7 @@ const GoSiteButton = styled.button`
 function EmploymentTrendDetail() {
   const { id } = useParams();
   const [data, setData] = useState(null);
-  const [scrapped, setScrapped] = useState(false); 
+  const [scrapped, setScrapped] = useState(false);
 
   useEffect(() => {
     axios
@@ -134,10 +134,7 @@ function EmploymentTrendDetail() {
     axios
       .get("http://127.0.0.1:3002/api/mypage/scraps") // 스크랩 여부 확인
       .then((res) => {
-        const exists = res.data.scraps?.some(
-          (scrap) =>
-            scrap.post_type === "info" && String(scrap.info_post_id) === id
-        );
+        const exists = res.data.scraps?.some((scrap) => scrap.post_type === "info" && String(scrap.info_post_id) === id);
         setScrapped(exists);
       })
       .catch((err) => {
@@ -165,7 +162,7 @@ function EmploymentTrendDetail() {
     <>
       <Header />
       <PageWrapper>
-        <Title>중장년 취업 트렌드</Title>
+        <Title>취업 시장 트렌드</Title>
         <CardWrapper>
           <TopBar>
             <TitleGroup>
@@ -179,26 +176,17 @@ function EmploymentTrendDetail() {
             </ScrapIcon>
           </TopBar>
 
-          <ThumbnailWrapper>
-            {data.thumbnail ? (
-              <ImageThumbnail src={data.thumbnail} alt="썸네일 이미지" />
-            ) : (
-              <GrayBox />
-            )}
-          </ThumbnailWrapper>
+          <ThumbnailWrapper>{data.thumbnail ? <ImageThumbnail src={data.thumbnail} alt="썸네일 이미지" /> : <GrayBox />}</ThumbnailWrapper>
 
           <CategoryTag>중장년 취업</CategoryTag>
           <Summary>{data.summary}</Summary>
 
           {data.source_url && (
             <ButtonWrapper>
-              <GoSiteButton onClick={() => window.open(data.source_url, "_blank")}>
-                사이트 바로가기 →
-              </GoSiteButton>
+              <GoSiteButton onClick={() => window.open(data.source_url, "_blank")}>사이트 바로가기 →</GoSiteButton>
             </ButtonWrapper>
           )}
         </CardWrapper>
-
       </PageWrapper>
     </>
   );
