@@ -138,13 +138,12 @@ function EmploymentTrendDetail() {
     axios
       .get("http://127.0.0.1:3002/api/mypage/scraps", {
         headers: { Authorization: `Bearer ${token}` },
+        params: { user_id: userId }, // ✅ query로 전달
       })
       .then((res) => {
-        console.log(res);
-
         const list = Array.isArray(res?.data?.scraps) ? res.data.scraps : [];
         const exists = list.some((s) => s.type === "info" && Number(s.id) === Number(id));
-        setScrapped(exists);
+        setScrapped(exists); // true면 fill 아이콘 바로 보여짐
       })
       .catch((err) => console.error("스크랩 확인 실패:", err));
   }, [id, token]);

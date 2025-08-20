@@ -215,6 +215,7 @@ function CommunityDetail() {
   // 로그인 사용자
   const USER_ID = Number(localStorage.getItem("userId") || localStorage.getItem("user_id") || 1);
   const LOCAL_USERNAME = localStorage.getItem("username") || localStorage.getItem("userName") || "";
+  const token = localStorage.getItem("token");
 
   const getMyDisplayName = async () => {
     if (LOCAL_USERNAME) return LOCAL_USERNAME;
@@ -271,7 +272,11 @@ function CommunityDetail() {
         setPost((prev) => (prev ? { ...prev, like_count: (prev.like_count || 0) + 1 } : prev));
       } else {
         // 좋아요 취소
-        await axios.delete(`/api/community/${numericId}/like`);
+        await axios.delete(`/api/community/${numericId}/like`, {
+          data: { user_id: USER_ID },
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
         setLiked(false);
         setPost((prev) => (prev ? { ...prev, like_count: Math.max(0, (prev.like_count || 0) - 1) } : prev));
       }
@@ -282,8 +287,12 @@ function CommunityDetail() {
       if (!liked && status === 400) {
         // 이미 좋아요한 게시물
         window.alert("이미 좋아요한 게시물입니다."); // [수정]
-        setLiked(true); //강제 보정
-        setPost((prev) => (prev ? { ...prev, like_count: Math.max(prev.like_count || 0, (prev.like_count || 0) + 1) } : prev)); // [수정] 최소 +1
+        setLiked(true);
+        setPost((prev) =>
+          prev
+            ? { ...prev, like_count: Math.max(0, prev.like_count || 1) } // ✅ alert 후 -1 처리
+            : prev
+        );
       } else if (liked && status === 400) {
         // 좋아요가 안 된 상태에서 취소 시도
         window.alert("이미 좋아요가 해제된 상태입니다."); // [수정]
