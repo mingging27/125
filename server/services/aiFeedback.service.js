@@ -3,13 +3,7 @@ const { AIFeedback, Resume } = require("../models");
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-exports.createFeedback = async ({
-  resume_id,
-  job_role,
-  industry,
-  career_gap,
-  career_history,
-}) => {
+exports.createFeedback = async ({ resume_id, job_role, industry, career_gap, career_history }) => {
   // 이력서 로드
   let resumeText = "";
   if (resume_id) {
