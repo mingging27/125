@@ -216,6 +216,8 @@ exports.unlikePost = async (req, res) => {
     const userId = req.user?.id || req.body.user_id;
     const postId = parseInt(req.params.id, 10);
 
+    console.log("[unlikePost] userId:", userId, "postId:", postId);
+
     const deleted = await Like.destroy({
       where: {
         user_id: userId,

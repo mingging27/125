@@ -44,7 +44,7 @@ exports.getInfoPostById = async (req, res) => {
 
 // 게시글 스크랩
 exports.scrapInfoPost = async (req, res) => {
-  const userId = req.user?.id || 1; // 임시로 user_id = 1
+  const userId = req.user?.id || req.body.user_id; // 임시로 user_id = 1
   const postId = req.params.id;
 
   try {
@@ -74,7 +74,7 @@ exports.scrapInfoPost = async (req, res) => {
 
 // 게시글 스크랩 취소
 exports.unscrapInfoPost = async (req, res) => {
-  const userId = req.user?.id || 1;
+  const userId = req.user?.id || req.body.user_id;
   const postId = req.params.id;
 
   try {
