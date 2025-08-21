@@ -127,6 +127,7 @@ function ResumeForm() {
         phone_number: tel,
         gender,
         address,
+        email: `${email1}@${email2}`,
       },
     };
 
