@@ -491,14 +491,37 @@ function Detail() {
           </ListContentTop>
           <ListContentMiddle>
             <Subtitle>학력 정보</Subtitle>
-            <Text2>{resumeData.enrollment_status}</Text2>
+            <Wrap>
+              <Text>{resumeData.school}/</Text>
+              <Text2>{resumeData.enrollment_status}</Text2>
+            </Wrap>
           </ListContentMiddle>
+          {resumeData.career_type === "경력" && (
+            <ListContentMiddle>
+              <Subtitle>경력</Subtitle>
+              <Wrap>
+                <Label2>{resumeData.work_period_text}</Label2>
+                <Text>{resumeData.company_name}</Text>
+              </Wrap>
+            </ListContentMiddle>
+          )}
           <ListContentMiddle>
             <Subtitle>자격증</Subtitle>
             {resumeData.certificates.map((cert, idx) => (
               <Wrap key={idx}>
                 <Label3>{cert.acquisition_year}</Label3>
                 <Text>{cert.certificate_name}</Text>
+              </Wrap>
+            ))}
+          </ListContentMiddle>
+          <ListContentMiddle>
+            <Subtitle>어학성적</Subtitle>
+            {resumeData.languageScores.map((lang, idx) => (
+              <Wrap key={idx}>
+                <Label3>{lang.acquisition_year}</Label3>
+                <Text>
+                  {lang.test_name} (점수/등급: {lang.score})
+                </Text>
               </Wrap>
             ))}
           </ListContentMiddle>
@@ -519,19 +542,15 @@ function Detail() {
               <Text>{resumeData.desired_job_category}</Text>
             </Wrap>
             <Wrap>
-              <Label3>근무형태</Label3>
-              <Text>{resumeData.career_type}</Text>
-            </Wrap>
-            <Wrap>
               <Label3>근무기간</Label3>
               <Text>{resumeData.desired_work_duration}</Text>
             </Wrap>
             <Wrap>
-              <Label3>근무기간</Label3>
+              <Label3>근무요일</Label3>
               <Text>
-                {resumeData.preferredDays.map((d, i) => (
-                  <span key={i}>{d.day} </span>
-                ))}
+                {resumeData.preferred_day_type === "요일"
+                  ? resumeData.preferredDays.map((d, i) => <span key={i}>{d.day} </span>)
+                  : resumeData.preferred_day_type}
               </Text>
             </Wrap>
           </ListContentBottom>
